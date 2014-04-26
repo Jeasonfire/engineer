@@ -45,7 +45,7 @@ public class Sprite {
 			int yy = yp + y;
 			for (int xp = 0; xp < width; xp++) {
 				int xx = xp + x;
-				pixels[xx + yy * width] = result.getPixel(xp, yp);
+				result.setPixel(getPixel(xx, yy), xp, yp);
 			}
 		}
 		return result;

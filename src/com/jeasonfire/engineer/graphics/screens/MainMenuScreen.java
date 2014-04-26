@@ -8,6 +8,7 @@ public class MainMenuScreen extends Screen {
 	}
 
 	public void draw() {
+		drawString("Engineer", 16, 16, 2);
 	}
 
 	public void update(float delta) {
