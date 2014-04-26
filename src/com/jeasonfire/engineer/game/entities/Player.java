@@ -9,7 +9,7 @@ import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class Player extends Entity {
 	public Player(float x, float y) {
-		super(x, y, 200.0f, new Rectangle(2, 2, 12, 14), new Sprite("player.png"));
+		super(x, y, 75.0f, new Rectangle(2, 2, 12, 14), new Sprite("player.png"));
 	}
 
 	public void update(float delta, Level level) {
@@ -38,6 +38,11 @@ public class Player extends Entity {
 			}
 		} else {
 			xVel = 0;
+		}
+		if (Input.keys[KeyEvent.VK_SHIFT]) {
+			speed = 150.0f;
+		} else {
+			speed = 75.0f;
 		}
 		move(delta, level);
 	}
