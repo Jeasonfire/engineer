@@ -1,6 +1,7 @@
 package com.jeasonfire.engineer.graphics.screens;
 
 import com.jeasonfire.engineer.Game;
+import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public abstract class Screen {
 	protected int width, height;
@@ -20,6 +21,21 @@ public abstract class Screen {
 	public void clear() {
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = 0;
+		}
+	}
+	
+	public void drawSprite(Sprite sprite, int x, int y) {
+		drawSprite(sprite, x, y, 1);
+	}
+	
+	public void drawSprite(Sprite sprite, int x, int y, int scale) {
+		for (int yp = 0; yp < sprite.getHeight(); yp++) {
+			int yy = yp * scale + y;
+			for (int xp = 0; xp < sprite.getWidth(); xp++) {
+				int xx = xp * scale + x;
+				if (sprite.getPixel(xp, yp) != 0xFF00FF)
+					drawRectangle(sprite.getPixel(xp, yp), xx, yy, scale, scale);
+			}
 		}
 	}
 	

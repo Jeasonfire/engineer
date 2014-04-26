@@ -4,16 +4,18 @@ import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Game;
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class IntroScreen extends Screen {
 	private float x = 0, y = 0;
-	
+	private Sprite test = new Sprite("testSprite.png");
+
 	public IntroScreen(Game game) {
 		super(game);
 	}
 
 	public void draw() {
-		drawShadedRectangle(0xCC00, 0xAA00, 0x8800, (int) x, (int) y, 40, 40);
+		drawSprite(test, (int) x, (int) y, 2);
 	}
 
 	public void update(float delta) {
