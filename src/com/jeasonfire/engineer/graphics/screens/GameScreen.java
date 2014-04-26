@@ -18,5 +18,8 @@ public class GameScreen extends Screen {
 
 	public void update(float delta) {
 		state.update(delta);
+		if (state.nextState != null) {
+			state = state.nextState;
+		}
 	}
 }
