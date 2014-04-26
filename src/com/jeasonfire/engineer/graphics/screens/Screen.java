@@ -137,4 +137,12 @@ public abstract class Screen {
 			return -1;
 		return pixels[x + y * width];
 	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
 }

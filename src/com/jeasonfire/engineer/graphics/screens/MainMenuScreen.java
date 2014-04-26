@@ -33,7 +33,7 @@ public class MainMenuScreen extends Screen {
 	
 	public void select() {
 		if (selection == PLAY) {
-			
+			nextScreen = new GameScreen(game);
 		}
 		if (selection == INFO) {
 			nextScreen = new InfoScreen(game);
