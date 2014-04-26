@@ -114,14 +114,18 @@ public abstract class Screen {
 			int yy = yp + y;
 			for (int xp = 0; xp < w; xp++) {
 				int xx = xp + x;
-				int r = (int) (HexColor.getRed(color) * transparency + HexColor
-						.getRed(getPixel(xx, yy))) & 0xFF;
-				int g = (int) (HexColor.getGreen(color) * transparency + HexColor
-						.getGreen(getPixel(xx, yy))) & 0xFF;
-				int b = (int) (HexColor.getBlue(color) * transparency + HexColor
-						.getBlue(getPixel(xx, yy))) & 0xFF;
-				int c = HexColor.getHex(r, g, b);
-				setPixel(c, xx, yy);
+				if (transparency < 1f) {
+					int r = (int) (HexColor.getRed(color) * transparency + HexColor
+							.getRed(getPixel(xx, yy))) & 0xFF;
+					int g = (int) (HexColor.getGreen(color) * transparency + HexColor
+							.getGreen(getPixel(xx, yy))) & 0xFF;
+					int b = (int) (HexColor.getBlue(color) * transparency + HexColor
+							.getBlue(getPixel(xx, yy))) & 0xFF;
+					int c = HexColor.getHex(r, g, b);
+					setPixel(c, xx, yy);
+				} else {
+					setPixel(color, xx, yy);
+				}
 			}
 		}
 	}
