@@ -6,37 +6,35 @@ import java.awt.event.KeyEvent;
 import com.jeasonfire.engineer.Game;
 import com.jeasonfire.engineer.Input;
 
-public class MainMenuScreen extends Screen {
-	private static int PLAY = 0, INFO = 1;
+public class InfoScreen extends Screen {
+	private static int BACK = 0, NOTHING = 1;
 	private int selection = 0;
-	private Rectangle playBox, infoBox;
-	
-	public MainMenuScreen(Game game) {
+	private Rectangle backBox;
+
+	public InfoScreen(Game game) {
 		super(game);
-		playBox = new Rectangle(0, 48, width, 8);
-		infoBox = new Rectangle(0, 60, width, 8);
+		backBox = new Rectangle(0, height - 12, width, 8);
 	}
 
 	public void draw() {
 		drawString("Engineer", 16, 8, 2);
-		if (selection == PLAY) {
-			drawString("> Play <", width / 2 - 32, playBox.y);
+
+		drawString("Controls", width / 2 - 32, 25);
+		drawString("Movement:", 8, 35);
+		drawString("WASD or IJKL", 16, 45);
+		drawString("Interactions:", 8, 55);
+		drawString("Enter or Ctrl", 16, 65);
+
+		if (selection == BACK) {
+			drawString("> Back <", width / 2 - 32, backBox.y);
 		} else {
-			drawString("Play", width / 2 - 16, playBox.y);
-		}
-		if (selection == INFO) {
-			drawString("> Info <", width / 2 - 32, infoBox.y);
-		} else {
-			drawString("Info", width / 2 - 16, infoBox.y);
+			drawString("Back", width / 2 - 16, backBox.y);
 		}
 	}
-	
+
 	public void select() {
-		if (selection == PLAY) {
-			
-		}
-		if (selection == INFO) {
-			nextScreen = new InfoScreen(game);
+		if (selection == BACK) {
+			nextScreen = new MainMenuScreen(game);
 		}
 	}
 
@@ -44,24 +42,23 @@ public class MainMenuScreen extends Screen {
 		/**
 		 * Mouse
 		 */
-		if (playBox.contains(Input.msp)) {
-			selection = PLAY;
-		}
-		if (infoBox.contains(Input.msp)) {
-			selection = INFO;
+		if (backBox.contains(Input.msp)) {
+			selection = BACK;
+		} else {
+			selection = NOTHING;
 		}
 		if (Input.mouseDown) {
 			select();
 		}
-		
+
 		/**
 		 * Keyboard
 		 */
 		if (Input.keys[KeyEvent.VK_W] || Input.keys[KeyEvent.VK_I] || Input.keys[KeyEvent.VK_UP]) {
-			selection = PLAY;
+			selection = NOTHING;
 		}
 		if (Input.keys[KeyEvent.VK_S] || Input.keys[KeyEvent.VK_K] || Input.keys[KeyEvent.VK_DOWN]) {
-			selection = INFO;
+			selection = BACK;
 		}
 		if (Input.keys[KeyEvent.VK_ENTER] || Input.keys[KeyEvent.VK_CONTROL] || Input.keys[KeyEvent.VK_SPACE]) {
 			select();
