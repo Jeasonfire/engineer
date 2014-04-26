@@ -1,6 +1,7 @@
 package com.jeasonfire.engineer.graphics.screens;
 
 import com.jeasonfire.engineer.Game;
+import com.jeasonfire.engineer.graphics.HexColor;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public abstract class Screen {
@@ -29,12 +30,16 @@ public abstract class Screen {
 	}
 	
 	public void drawSprite(Sprite sprite, int x, int y, int scale) {
+		drawSprite(sprite, x, y, scale, 1.0f);
+	}
+	
+	public void drawSprite(Sprite sprite, int x, int y, int scale, float transparency) {
 		for (int yp = 0; yp < sprite.getHeight(); yp++) {
 			int yy = yp * scale + y;
 			for (int xp = 0; xp < sprite.getWidth(); xp++) {
 				int xx = xp * scale + x;
 				if (sprite.getPixel(xp, yp) != 0xFF00FF)
-					drawRectangle(sprite.getPixel(xp, yp), xx, yy, scale, scale);
+					drawRectangle(sprite.getPixel(xp, yp), xx, yy, scale, scale, transparency);
 			}
 		}
 	}
@@ -48,11 +53,25 @@ public abstract class Screen {
 	}
 	
 	public void drawRectangle(int color, int x, int y, int w, int h) {
+		drawRectangle(color, x, y, w, h, 1.0f);
+	}
+	
+	public void drawRectangle(int color, int x, int y, int w, int h, float transparency) {
+		if (transparency > 1) {
+			transparency = 1;
+		}
+		if (transparency < 0) {
+			transparency = 0;
+		}
 		for (int yp = 0; yp < h; yp++) {
 			int yy = yp + y;
 			for (int xp = 0; xp < w; xp++) {
 				int xx = xp + x;
-				setPixel(color, xx, yy);
+				int r = (int) (HexColor.getRed(color) * transparency + HexColor.getRed(getPixel(xx, yy))) & 0xFF;
+				int g = (int) (HexColor.getGreen(color) * transparency + HexColor.getGreen(getPixel(xx, yy))) & 0xFF;
+				int b = (int) (HexColor.getBlue(color) * transparency + HexColor.getBlue(getPixel(xx, yy))) & 0xFF;
+				int c = HexColor.getHex(r, g, b);
+				setPixel(c, xx, yy);
 			}
 		}
 	}

@@ -1,35 +1,22 @@
 package com.jeasonfire.engineer.graphics.screens;
 
-import java.awt.event.KeyEvent;
-
 import com.jeasonfire.engineer.Game;
-import com.jeasonfire.engineer.Input;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class IntroScreen extends Screen {
-	private float x = 0, y = 0;
-	private Sprite test = new Sprite("testSprite.png");
+	private Sprite test = new Sprite("intro.png");
+	private float transparency = 0f;
+	private long startTime = System.currentTimeMillis();
 
 	public IntroScreen(Game game) {
 		super(game);
 	}
 
 	public void draw() {
-		drawSprite(test, (int) x, (int) y, 2);
+		drawSprite(test, width / 2 - test.getWidth() / 2, height / 2 - test.getHeight() / 2, 1, transparency);
 	}
 
 	public void update(float delta) {
-		if (Input.keys[KeyEvent.VK_W]) {
-			y -= delta * 100.0f;
-		}
-		if (Input.keys[KeyEvent.VK_A]) {
-			x -= delta * 100.0f;
-		}
-		if (Input.keys[KeyEvent.VK_S]) {
-			y += delta * 100.0f;
-		}
-		if (Input.keys[KeyEvent.VK_D]) {
-			x += delta * 100.0f;
-		}
+		transparency = (float) (Math.sin((System.currentTimeMillis() - startTime) / 1000.0));
 	}
 }
