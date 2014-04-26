@@ -13,6 +13,8 @@ public abstract class Level {
 	public int width, height;
 	protected ArrayList<Entity> entities;
 	protected int xScroll, yScroll;
+	private float xScrollCenter, yScrollCenter;
+	private float transparencyRange = 4;
 
 	private static Sprite[] tileset;
 	static {
@@ -67,18 +69,31 @@ public abstract class Level {
 				int xp = x * tileSize - (xScroll % tileSize);
 				if (xp < -tileSize || xp >= screen.getWidth())
 					continue;
-				screen.drawSprite(getTileSprite(tiles[xx + yy * width]), xp, yp);
+				screen.drawSprite(getTileSprite(tiles[xx + yy * width]), xp,
+						yp, 1, getTransparency(xx, yy));
 			}
 		}
 		for (Entity e : entities) {
 			if (e instanceof Player) {
 				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e
 						.getWidth() / 2);
+				xScrollCenter = e.getX();
 				yScroll = (int) (e.getY() - screen.getHeight() / 2 + e
 						.getHeight() / 2);
+				yScrollCenter = e.getY();
 			}
 			e.draw(screen, (int) xScroll, (int) yScroll);
 		}
+	}
+
+	public float getTransparency(float x, float y) {
+		float xt = x - xScrollCenter / tileSize;
+		float yt = y - yScrollCenter / tileSize;
+		float intensity = (float) (transparencyRange - Math.sqrt(xt*xt + yt*yt));
+		if (intensity < 0)
+			return 0;
+		intensity = 1 - 1 / intensity;
+		return intensity;
 	}
 
 	public void update(float delta) {
@@ -92,7 +107,7 @@ public abstract class Level {
 			return new Sprite(tileSize, tileSize);
 		return tileset[index];
 	}
-	
+
 	public boolean getTileSolid(int id) {
 		switch (id) {
 		default:
@@ -106,6 +121,7 @@ public abstract class Level {
 	public boolean isSolid(float x, float y) {
 		if (x < 0 || x / tileSize >= width || y < 0 || y / tileSize >= height)
 			return false;
-		return getTileSolid(tiles[(int) (x / tileSize) + (int) (y / tileSize) * width]);
+		return getTileSolid(tiles[(int) (x / tileSize) + (int) (y / tileSize)
+				* width]);
 	}
 }
