@@ -8,6 +8,7 @@ public abstract class Screen {
 	protected int width, height;
 	private int[] pixels;
 	protected final Game game;
+	public Screen nextScreen = null;
 	
 	public Screen(Game game) {
 		this.game = game;

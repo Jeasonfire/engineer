@@ -37,6 +37,9 @@ public class Game extends Canvas implements Runnable {
 
 	public void update(float delta) {
 		screen.update(delta);
+		if (screen.nextScreen != null) {
+			screen = screen.nextScreen;
+		}
 	}
 
 	public void clear() {
@@ -112,8 +115,8 @@ public class Game extends Canvas implements Runnable {
 		while (running) {
 			nowTime = System.nanoTime();
 			delta = (nowTime - lastTime) / 1000000000.0f;
-			update(delta);
 			render();
+			update(delta);
 			frames++;
 			lastTime = nowTime;
 			if (System.currentTimeMillis() - timer > 1000) {

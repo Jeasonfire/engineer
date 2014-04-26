@@ -6,7 +6,7 @@ import com.jeasonfire.engineer.graphics.sprites.Sprite;
 public class IntroScreen extends Screen {
 	private Sprite test = new Sprite("intro.png");
 	private float transparency = 0f;
-	private long startTime = System.currentTimeMillis();
+	private long startTime = -1;
 
 	public IntroScreen(Game game) {
 		super(game);
@@ -17,6 +17,10 @@ public class IntroScreen extends Screen {
 	}
 
 	public void update(float delta) {
-		transparency = (float) (Math.sin((System.currentTimeMillis() - startTime) / 1000.0));
+		if (startTime == -1)
+			startTime = System.currentTimeMillis();
+		transparency = (float) (Math.sin((System.currentTimeMillis() - startTime) / 500.0));
+		if (transparency < 0) 
+			nextScreen = new MainMenuScreen(game);
 	}
 }
