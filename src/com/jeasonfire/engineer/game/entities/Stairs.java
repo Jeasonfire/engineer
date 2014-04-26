@@ -1,0 +1,20 @@
+package com.jeasonfire.engineer.game.entities;
+
+import java.awt.Rectangle;
+
+import com.jeasonfire.engineer.game.levels.Level;
+import com.jeasonfire.engineer.graphics.sprites.Sprite;
+
+public class Stairs extends Entity {
+	public Stairs(float x, float y) {
+		super(x, y, 0, new Rectangle(0, 0, 16, 16), new Sprite("stairs.png"));
+	}
+
+	public void update(float delta, Level level) {
+		for (Entity e : level.entities) {
+			if (e instanceof Player && e.collision(this)) {
+				level.nextLevel();
+			}
+		}
+	}
+}

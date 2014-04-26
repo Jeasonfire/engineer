@@ -5,17 +5,22 @@ import java.util.ArrayList;
 
 import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
+import com.jeasonfire.engineer.game.entities.Stairs;
+import com.jeasonfire.engineer.graphics.HexColor;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
-public abstract class Level {
+public class Level {
 	public static int tileSize = 16, cellSize = 3;
 	public int[] tiles;
 	public int width, height;
-	protected ArrayList<Entity> entities;
+	public ArrayList<Entity> entities;
+	public int currentLevel = 1, maxLevels = 1;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
+	
+	public boolean victory = false, gameover = false;
 
 	private class SwitchGate {
 		private Point switchPoint;
@@ -76,10 +81,37 @@ public abstract class Level {
 
 	public Level() {
 		entities = new ArrayList<Entity>();
-		generate();
+		generate(currentLevel);
 	}
 
-	protected abstract void generate();
+	public void generate(int level) {
+		Sprite load = new Sprite("level" + level + ".png");
+		this.width = load.getWidth() * cellSize;
+		this.height = load.getHeight() * cellSize;
+		this.tiles = new int[width * height];
+		for (int y = 0; y < height / cellSize; y++) {
+			for (int x = 0; x < width / cellSize; x++) {
+				int id = load.getPixel(x, y) & 0xFFFFFF;
+				if (id == 0xFFFFFF) {
+					setNextLevel(x, y);
+				} else if (HexColor.getRed(id) == 0xFF) {						
+					if (HexColor.getGreen(id) > 0) 
+						setSwitch(HexColor.getGreen(id), x, y);
+					if (HexColor.getBlue(id) > 0) 
+						setGate(HexColor.getBlue(id), x, y);
+				} else {
+					setCell(id, x, y);
+				}
+			}
+		}
+	}
+	public void nextLevel() {
+		currentLevel++;
+		if (currentLevel <= maxLevels)
+			generate(currentLevel);
+		else
+			victory = true;
+	}
 
 	public void toggleSwitch(int x, int y) {
 		for (SwitchGate sg : switchGates) {
@@ -103,6 +135,11 @@ public abstract class Level {
 		setCell(1, x, y);
 	}
 
+	public void setNextLevel(int x, int y) {
+		setCell(0, x, y);
+		entities.add(new Stairs(x * cellSize * tileSize, y * cellSize * tileSize));
+	}
+	
 	public void setCell(int id, int x, int y) {
 		for (int i = 0; i < cellSize * cellSize; i++) {
 			setTile(id, x * cellSize + i % cellSize, y * cellSize + i

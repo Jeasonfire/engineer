@@ -22,6 +22,18 @@ public abstract class Entity {
 	
 	public abstract void update(float delta, Level level);
 	
+	public boolean collision(Entity e) {
+		if (getX() > e.getX() + e.getWidth())
+			return false;
+		if (getX() + getWidth() - 1 < e.getX())
+			return false;
+		if (getY() > e.getY() + e.getHeight())
+			return false;
+		if (getY() + getHeight() - 1 < e.getY())
+			return false;
+		return true;
+	}
+	
 	public boolean collision(Level level) {
 		float x0 = getX();
 		float x1 = getX() + getWidth() - 1;

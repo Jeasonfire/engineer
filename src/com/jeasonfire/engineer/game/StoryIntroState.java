@@ -32,7 +32,7 @@ public class StoryIntroState extends GameState {
 			endTime = System.currentTimeMillis();
 		}
 		if (System.currentTimeMillis() - endTime > 500 && endTime > 0) {
-			nextState = new Level1State(screen);
+			nextState = new LevelState(screen);
 		}
 	}
 }

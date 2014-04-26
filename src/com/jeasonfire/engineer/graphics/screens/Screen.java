@@ -7,7 +7,7 @@ import com.jeasonfire.engineer.graphics.sprites.Sprite;
 public abstract class Screen {
 	protected int width, height;
 	private int[] pixels;
-	protected final Game game;
+	public final Game game;
 	public Screen nextScreen = null;
 
 	private static Sprite charactersImg = new Sprite("font.png");
