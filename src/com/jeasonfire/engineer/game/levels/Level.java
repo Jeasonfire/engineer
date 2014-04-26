@@ -1,5 +1,6 @@
 package com.jeasonfire.engineer.game.levels;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.jeasonfire.engineer.game.entities.Entity;
@@ -8,13 +9,57 @@ import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public abstract class Level {
-	public static int tileSize = 16;
+	public static int tileSize = 16, cellSize = 3;
 	public int[] tiles;
 	public int width, height;
 	protected ArrayList<Entity> entities;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
+
+	private class SwitchGate {
+		private Point switchPoint;
+		private Point gatePoint;
+		private boolean open = false;
+
+		public void setSwitch(int x, int y) {
+			switchPoint = new Point(x, y);
+		}
+
+		public void setGate(int x, int y) {
+			gatePoint = new Point(x, y);
+		}
+
+		public boolean getNearSwitch(int x, int y) {
+			return switchPoint.x == x && switchPoint.y == y;
+		}
+
+		public void setOpen(boolean open) {
+			this.open = open;
+		}
+
+		public boolean getOpen() {
+			return open;
+		}
+
+		public int getSwitchX() {
+			return switchPoint.x;
+		}
+
+		public int getSwitchY() {
+			return switchPoint.y;
+		}
+
+		public int getGateX() {
+			return gatePoint.x;
+		}
+
+		public int getGateY() {
+			return gatePoint.y;
+		}
+	};
+
+	private SwitchGate[] switchGates = new SwitchGate[256];
 
 	private static Sprite[] tileset;
 	static {
@@ -35,6 +80,39 @@ public abstract class Level {
 	}
 
 	protected abstract void generate();
+
+	public void toggleSwitch(int x, int y) {
+		for (SwitchGate sg : switchGates) {
+			if (sg != null && sg.getNearSwitch(x, y)) {
+				sg.setOpen(!sg.getOpen());
+			}
+		}
+	}
+
+	public void setSwitch(int id, int x, int y) {
+		if (switchGates[id] == null)
+			switchGates[id] = new SwitchGate();
+		switchGates[id].setSwitch(x, y);
+		setCell(0, x, y);
+	}
+
+	public void setGate(int id, int x, int y) {
+		if (switchGates[id] == null)
+			switchGates[id] = new SwitchGate();
+		switchGates[id].setGate(x, y);
+		setCell(1, x, y);
+	}
+
+	public void setCell(int id, int x, int y) {
+		for (int i = 0; i < cellSize * cellSize; i++) {
+			setTile(id, x * cellSize + i % cellSize, y * cellSize + i
+					/ cellSize);
+		}
+	}
+
+	public int getCell(int x, int y) {
+		return tiles[(x * cellSize) + (y * cellSize + cellSize / 2) * width];
+	}
 
 	public void setTile(int id, int x, int y) {
 		if (x + y * width < 0 || x + y * width >= tiles.length)
@@ -73,6 +151,25 @@ public abstract class Level {
 						yp, 1, getTransparency(xx, yy));
 			}
 		}
+		for (SwitchGate sg : switchGates) {
+			if (sg != null) {
+				if (sg.getOpen()) {
+					screen.drawShadedRectangle(0xCC00, 0xAA00, 0x8800,
+							sg.getSwitchX() * cellSize * tileSize + cellSize
+									* tileSize / 2 - tileSize / 2 - xScroll,
+							sg.getSwitchY() * cellSize * tileSize + cellSize
+									* tileSize / 2 - tileSize / 2 - yScroll,
+							tileSize, tileSize);
+				} else {
+					screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000,
+							sg.getSwitchX() * cellSize * tileSize + cellSize
+									* tileSize / 2 - tileSize / 2 - xScroll,
+							sg.getSwitchY() * cellSize * tileSize + cellSize
+									* tileSize / 2 - tileSize / 2 - yScroll,
+							tileSize, tileSize);
+				}
+			}
+		}
 		for (Entity e : entities) {
 			if (e instanceof Player) {
 				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e
@@ -89,7 +186,8 @@ public abstract class Level {
 	public float getTransparency(float x, float y) {
 		float xt = x - xScrollCenter / tileSize;
 		float yt = y - yScrollCenter / tileSize;
-		float intensity = (float) (transparencyRange - Math.sqrt(xt*xt + yt*yt));
+		float intensity = (float) (transparencyRange - Math.sqrt(xt * xt + yt
+				* yt));
 		if (intensity < 0)
 			return 0;
 		intensity = 1 - 1 / intensity;
@@ -99,6 +197,16 @@ public abstract class Level {
 	public void update(float delta) {
 		for (Entity e : entities) {
 			e.update(delta, this);
+		}
+		for (SwitchGate sg : switchGates) {
+			if (sg != null) {
+				if (sg.getOpen()) {
+					setCell(0, sg.getGateX(), sg.getGateY());
+				}
+				if (!sg.getOpen()) {
+					setCell(0xFF, sg.getGateX(), sg.getGateY());
+				}
+			}
 		}
 	}
 
