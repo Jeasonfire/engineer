@@ -1,5 +1,9 @@
 package com.jeasonfire.engineer.game.levels;
 
+import java.util.ArrayList;
+
+import com.jeasonfire.engineer.game.entities.Entity;
+import com.jeasonfire.engineer.game.entities.Player;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
@@ -7,6 +11,8 @@ public abstract class Level {
 	public static int tileSize = 16;
 	public int[] tiles;
 	public int width, height;
+	protected ArrayList<Entity> entities;
+	protected int xScroll, yScroll;
 
 	private static Sprite[] tileset;
 	static {
@@ -22,6 +28,7 @@ public abstract class Level {
 	};
 
 	public Level() {
+		entities = new ArrayList<Entity>();
 		generate();
 	}
 
@@ -38,10 +45,14 @@ public abstract class Level {
 		case 0xFF:
 			tiles[x + y * width] = 1;
 			break;
+		case 0xFF00:
+			tiles[x + y * width] = 1;
+			entities.add(new Player(x * tileSize, y * tileSize));
+			break;
 		}
 	}
 
-	public void draw(Screen screen, int xScroll, int yScroll) {
+	public void draw(Screen screen) {
 		for (int y = 0; y < height; y++) {
 			int yy = y + yScroll / tileSize;
 			if (yy < 0 || yy >= height)
@@ -58,6 +69,19 @@ public abstract class Level {
 					continue;
 				screen.drawSprite(getTileSprite(tiles[xx + yy * width]), xp, yp);
 			}
+		}
+		for (Entity e : entities) {
+			if (e instanceof Player) {
+				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e.getWidth() / 2);
+				yScroll = (int) (e.getY() - screen.getHeight() / 2 + e.getHeight() / 2);
+			}
+			e.draw(screen, (int) xScroll, (int) yScroll);
+		}
+	}
+	
+	public void update(float delta) {
+		for (Entity e : entities) {
+			e.update(delta);
 		}
 	}
 
