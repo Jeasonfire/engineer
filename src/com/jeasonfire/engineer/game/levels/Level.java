@@ -46,7 +46,7 @@ public abstract class Level {
 			tiles[x + y * width] = 1;
 			break;
 		case 0xFF00:
-			tiles[x + y * width] = 1;
+			tiles[x + y * width] = 0;
 			entities.add(new Player(x * tileSize, y * tileSize));
 			break;
 		}
@@ -72,16 +72,18 @@ public abstract class Level {
 		}
 		for (Entity e : entities) {
 			if (e instanceof Player) {
-				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e.getWidth() / 2);
-				yScroll = (int) (e.getY() - screen.getHeight() / 2 + e.getHeight() / 2);
+				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e
+						.getWidth() / 2);
+				yScroll = (int) (e.getY() - screen.getHeight() / 2 + e
+						.getHeight() / 2);
 			}
 			e.draw(screen, (int) xScroll, (int) yScroll);
 		}
 	}
-	
+
 	public void update(float delta) {
 		for (Entity e : entities) {
-			e.update(delta);
+			e.update(delta, this);
 		}
 	}
 
@@ -89,5 +91,21 @@ public abstract class Level {
 		if (index < 0 || index >= tileset.length)
 			return new Sprite(tileSize, tileSize);
 		return tileset[index];
+	}
+	
+	public boolean getTileSolid(int id) {
+		switch (id) {
+		default:
+		case 0:
+			return false;
+		case 1:
+			return true;
+		}
+	}
+
+	public boolean isSolid(float x, float y) {
+		if (x < 0 || x / tileSize >= width || y < 0 || y / tileSize >= height)
+			return false;
+		return getTileSolid(tiles[(int) (x / tileSize) + (int) (y / tileSize) * width]);
 	}
 }

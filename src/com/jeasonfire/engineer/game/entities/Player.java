@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class Player extends Entity {
@@ -11,7 +12,7 @@ public class Player extends Entity {
 		super(x, y, 200.0f, new Rectangle(2, 2, 12, 14), new Sprite("player.png"));
 	}
 
-	public void update(float delta) {
+	public void update(float delta, Level level) {
 		if (Input.keys[KeyEvent.VK_W] || Input.keys[KeyEvent.VK_I] || Input.keys[KeyEvent.VK_UP]) {
 			yVel -= delta * 20;
 			if (yVel < -1) {
@@ -38,6 +39,6 @@ public class Player extends Entity {
 		} else {
 			xVel = 0;
 		}
-		move(delta);
+		move(delta, level);
 	}
 }
