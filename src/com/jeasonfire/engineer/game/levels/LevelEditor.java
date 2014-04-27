@@ -173,7 +173,7 @@ public class LevelEditor extends Level {
 		case 5:
 			return Turret.SPRITE;
 		case 6:
-			return Player.SPRITE;
+			return Player.sprites[0][0];
 		case 7:
 			return Score.SPRITE;
 		default:
