@@ -1,13 +1,20 @@
 package com.jeasonfire.engineer.game.levels;
 
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
 import com.jeasonfire.engineer.game.entities.Stairs;
 import com.jeasonfire.engineer.game.entities.Turret;
+import com.jeasonfire.engineer.graphics.HexColor;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
@@ -17,7 +24,11 @@ public class LevelEditor extends Level {
 	private int currentTile = 2;
 
 	public LevelEditor() {
-		generate(8 * cellSize, 8 * cellSize, 1);
+		generate(
+				Integer.parseInt(JOptionPane.showInputDialog(null,
+						"Enter level width:")) * cellSize,
+				Integer.parseInt(JOptionPane.showInputDialog(null,
+						"Enter level height:")) * cellSize, 1);
 	}
 
 	/**
@@ -31,6 +42,9 @@ public class LevelEditor extends Level {
 		case 1:
 		case 2:
 		case 3:
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setCell(cellID - 1, cellX, cellY);
 			break;
 		case 4:
@@ -38,6 +52,9 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setNextLevel(cellX, cellY);
 			break;
 		case 5:
@@ -45,6 +62,9 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setTurret(cellX, cellY);
 			break;
 		case 6:
@@ -52,6 +72,9 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setPlayer(cellX, cellY);
 			break;
 		case 7:
@@ -59,6 +82,9 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setSwitch(Integer.parseInt(JOptionPane.showInputDialog(null,
 					"Enter switch ID:")), cellX, cellY);
 			break;
@@ -67,9 +93,59 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setGate(Integer.parseInt(JOptionPane.showInputDialog(null,
 					"Enter gate ID:")), cellX, cellY);
 			break;
+		}
+	}
+
+	public void save() {
+		try {
+			File file = new File(JOptionPane.showInputDialog(null,
+					"Enter a filename:"));
+			file.createNewFile();
+			BufferedImage img = new BufferedImage(width / cellSize, height
+					/ cellSize, BufferedImage.TYPE_INT_RGB);
+			int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer())
+					.getData();
+			for (int y = 0; y < height / cellSize; y++) {
+				for (int x = 0; x < width / cellSize; x++) {
+					pixels[x + y * (width / cellSize)] = getRGB(x, y);
+				}
+			}
+			ImageIO.write(img, "png", file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getRGB(int x, int y) {
+		if (getCellEntity(x, y) != null) {
+			Entity e = getCellEntity(x, y);
+			if (e instanceof Stairs)
+				return 0xFFFFFFFF;
+			if (e instanceof Turret)
+				return 0xFFAA0000;
+			if (e instanceof Player)
+				return 0xFF00FF00;
+		}
+		if (getCellSwitch(x, y) != null) {
+			return HexColor.getHex(0xFF, getCellSwitch(x, y).id, 0) + 0xFF000000;
+		}
+		if (getCellGate(x, y) != null) {
+			return HexColor.getHex(0xFF, 0, getCellGate(x, y).id) + 0xFF000000;
+		}
+		switch (getCell(x, y)) {
+		default:
+		case 0:
+			return 0;
+		case 1:
+			return 0xFF0000FF;
+		case 2:
+			return 0xFF0000AA;
 		}
 	}
 
@@ -106,15 +182,14 @@ public class LevelEditor extends Level {
 				if (getCellSwitch(x, y) != null) {
 					screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000,
 							xx, yy, tileSize, tileSize);
-					screen.drawString("S"
-							+ getSwitchGateID(getCellSwitch(x, y)), xx, yy
+					screen.drawString("S" + getCellSwitch(x, y).id, xx, yy
 							+ tileSize / 4);
 				}
 				if (getCellGate(x, y) != null) {
 					screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000,
 							xx, yy, tileSize, tileSize);
-					screen.drawString("G" + getSwitchGateID(getCellGate(x, y)),
-							xx, yy + tileSize / 4);
+					screen.drawString("G" + getCellGate(x, y).id, xx, yy
+							+ tileSize / 4);
 				}
 			}
 		}
@@ -186,6 +261,10 @@ public class LevelEditor extends Level {
 		if (Input.keys[KeyEvent.VK_D] || Input.keys[KeyEvent.VK_L]
 				|| Input.keys[KeyEvent.VK_RIGHT]) {
 			xScrollF += delta * 200f;
+		}
+		if (Input.keys[KeyEvent.VK_Z]) {
+			save();
+			Input.keys[KeyEvent.VK_Z] = false;
 		}
 		xScroll = (int) xScrollF;
 		yScroll = (int) yScrollF;

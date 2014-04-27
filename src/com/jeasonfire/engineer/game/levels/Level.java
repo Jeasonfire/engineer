@@ -26,14 +26,16 @@ public class Level {
 
 	public boolean victory = false, gameover = false;
 
-	private class SwitchGate {
+	protected class SwitchGate {
 		private ArrayList<Point> switchPoint;
 		private ArrayList<Point> gatePoint;
 		private boolean open = false;
+		public int id;
 
-		public SwitchGate() {
+		public SwitchGate(int id) {
 			switchPoint = new ArrayList<Point>();
 			gatePoint = new ArrayList<Point>();
+			this.id = id;
 		}
 
 		public void addSwitch(int x, int y) {
@@ -60,6 +62,24 @@ public class Level {
 				}
 			}
 			return false;
+		}
+
+		public void removeNearSwitch(int x, int y) {
+			for (Point p : switchPoint) {
+				if (p.x == x && p.y == y) {
+					switchPoint.remove(p);
+					break;
+				}
+			}
+		}
+
+		public void removeNearGate(int x, int y) {
+			for (Point p : gatePoint) {
+				if (p.x == x && p.y == y) {
+					gatePoint.remove(p);
+					break;
+				}
+			}
 		}
 
 		public void setOpen(boolean open) {
@@ -180,14 +200,14 @@ public class Level {
 
 	public void setSwitch(int id, int x, int y) {
 		if (switchGates[id] == null)
-			switchGates[id] = new SwitchGate();
+			switchGates[id] = new SwitchGate(id);
 		switchGates[id].addSwitch(x, y);
 		setCell(0, x, y);
 	}
 
 	public void setGate(int id, int x, int y) {
 		if (switchGates[id] == null)
-			switchGates[id] = new SwitchGate();
+			switchGates[id] = new SwitchGate(id);
 		switchGates[id].addGate(x, y);
 	}
 
@@ -235,15 +255,13 @@ public class Level {
 		return null;
 	}
 
-	public int getSwitchGateID(SwitchGate sg) {
-		for (int i = 0; i < switchGates.length; i++) {
-			if (switchGates[i] == null)
-				continue;
-			if (switchGates[i].equals(sg)) {
-				return i;
+	public void removeCellEntity(int x, int y) {
+		for (int i = 0; i < entities.size(); i++) {
+			if ((int) entities.get(i).getX() / tileSize / cellSize == x
+					&& (int) entities.get(i).getY() / tileSize / cellSize == y) {
+				entities.remove(entities.get(i));
 			}
 		}
-		return -1;
 	}
 
 	public SwitchGate getCellSwitch(int x, int y) {
@@ -270,6 +288,30 @@ public class Level {
 			}
 		}
 		return null;
+	}
+
+	public void removeCellSwitch(int x, int y) {
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			for (int j = 0; j < switchGates[i].getSwitchSize(); j++) {
+				if (switchGates[i].getNearSwitch(x, y)) {
+					switchGates[i].removeNearSwitch(x, y);
+				}
+			}
+		}
+	}
+
+	public void removeCellGate(int x, int y) {
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			for (int j = 0; j < switchGates[i].getGateSize(); j++) {
+				if (switchGates[i].getNearGate(x, y)) {
+					switchGates[i].removeNearGate(x, y);
+				}
+			}
+		}
 	}
 
 	public void setTile(int id, int x, int y) {
