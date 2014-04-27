@@ -297,6 +297,7 @@ public class LevelEditor extends Level {
 							"Enter level width:")) * cellSize,
 					Integer.parseInt(JOptionPane.showInputDialog(null,
 							"Enter level height:")) * cellSize, 1);
+			Input.keys[KeyEvent.VK_R] = false;
 		}
 		if (Input.keys[KeyEvent.VK_Z]) {
 			save();
