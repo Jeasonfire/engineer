@@ -18,7 +18,7 @@ public class GameoverScreen extends Screen {
 
 	public void draw() {
 		drawString("Engineer", 16, 8, 2);
-		drawString("Game over! D:", width / 2 - 52, 32, 1);
+		drawString("Game over! D:", width / 2 - 52, 48, 1);
 
 		if (selection == BACK) {
 			drawString("> Back <", width / 2 - 32, backBox.y);

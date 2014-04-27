@@ -18,7 +18,7 @@ public class VictoryScreen extends Screen {
 
 	public void draw() {
 		drawString("Engineer", 16, 8, 2);
-		drawString("You won!", 16, 32, 2);
+		drawString("You won!", width / 2 - 32, 48, 1);
 
 		if (selection == BACK) {
 			drawString("> Back <", width / 2 - 32, backBox.y);
