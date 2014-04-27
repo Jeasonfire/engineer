@@ -6,10 +6,11 @@ import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class Bullet extends Entity {
+	public static Sprite SPRITE = new Sprite("bullet.png");
 	private Entity host;
 
 	public Bullet(float x, float y, float targetX, float targetY, Entity host) {
-		super(x, y, 500.0f, new Rectangle(1, 1, 2, 2), new Sprite("bullet.png"));
+		super(x, y, 500.0f, new Rectangle(1, 1, 2, 2), SPRITE);
 		double direction = Math.atan2(targetY - y, targetX - x);
 		xVel = (float) Math.cos(direction);
 		yVel = (float) Math.sin(direction);

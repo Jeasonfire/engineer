@@ -6,10 +6,11 @@ import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class Turret extends Entity {
+	public static Sprite SPRITE = new Sprite("turret.png");
 	private float cooldown = 0;
 
 	public Turret(float x, float y) {
-		super(x, y, 0, new Rectangle(0, 0, 16, 16), new Sprite("turret.png"));
+		super(x, y, 0, new Rectangle(0, 0, 16, 16), SPRITE);
 	}
 
 	public void update(float delta, Level level) {

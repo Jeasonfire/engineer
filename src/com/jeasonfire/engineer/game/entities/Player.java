@@ -8,11 +8,11 @@ import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
 public class Player extends Entity {
+	public static Sprite SPRITE = new Sprite("player.png");
 	private float justPressed = 0;
-	
+
 	public Player(float x, float y) {
-		super(x, y, 75.0f, new Rectangle(2, 2, 12, 14),
-				new Sprite("player.png"));
+		super(x, y, 75.0f, new Rectangle(2, 2, 12, 14), SPRITE);
 	}
 
 	public void update(float delta, Level level) {
@@ -57,8 +57,9 @@ public class Player extends Entity {
 				justPressed = 0;
 			}
 		}
-		if (justPressed == 0 && (Input.keys[KeyEvent.VK_SPACE] || Input.keys[KeyEvent.VK_CONTROL]
-				|| Input.keys[KeyEvent.VK_ENTER])) {
+		if (justPressed == 0
+				&& (Input.keys[KeyEvent.VK_SPACE]
+						|| Input.keys[KeyEvent.VK_CONTROL] || Input.keys[KeyEvent.VK_ENTER])) {
 			level.toggleSwitch(
 					(int) (getX() / Level.cellSize / Level.tileSize),
 					(int) (getY() / Level.cellSize / Level.tileSize));
