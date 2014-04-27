@@ -91,11 +91,16 @@ public abstract class Screen {
 
 	public void drawShadedRectangle(int brightColor, int midColor,
 			int shadowColor, int x, int y, int w, int h) {
-		drawRectangle(brightColor, x, y, w - 1, 1);
-		drawRectangle(brightColor, x, y + 1, 1, h - 1);
-		drawRectangle(midColor, x + 1, y + 1, w - 2, h - 2);
-		drawRectangle(shadowColor, x + w - 1, y, 1, h);
-		drawRectangle(shadowColor, x + 1, y + h - 1, w - 1, 1);
+		drawShadedRectangle(brightColor, midColor, shadowColor, x, y, w, h, 1.0f);
+	}
+
+	public void drawShadedRectangle(int brightColor, int midColor,
+			int shadowColor, int x, int y, int w, int h, float transparency) {
+		drawRectangle(brightColor, x, y, w - 1, 1, transparency);
+		drawRectangle(brightColor, x, y + 1, 1, h - 1, transparency);
+		drawRectangle(midColor, x + 1, y + 1, w - 2, h - 2, transparency);
+		drawRectangle(shadowColor, x + w - 1, y, 1, h, transparency);
+		drawRectangle(shadowColor, x + 1, y + h - 1, w - 1, 1, transparency);
 	}
 
 	public void drawRectangle(int color, int x, int y, int w, int h) {

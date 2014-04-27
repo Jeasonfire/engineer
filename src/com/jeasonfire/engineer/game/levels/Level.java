@@ -53,6 +53,15 @@ public class Level {
 			return false;
 		}
 
+		public boolean getNearGate(int x, int y) {
+			for (Point p : gatePoint) {
+				if (p.x == x && p.y == y) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public void setOpen(boolean open) {
 			this.open = open;
 		}
@@ -103,6 +112,21 @@ public class Level {
 
 	public Level() {
 		generate(currentLevel);
+	}
+
+	public void generate(int width, int height, int type) {
+		generateNewLevel = false;
+		this.width = width;
+		this.height = height;
+		this.tiles = new int[width * height];
+		switchGates = new SwitchGate[256];
+		entities = new ArrayList<Entity>();
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				tiles[x + y * width] = type;
+			}
+		}
+		startTime = 0;
 	}
 
 	public void generate(int level) {
@@ -196,7 +220,56 @@ public class Level {
 	}
 
 	public int getCell(int x, int y) {
-		return tiles[(x * cellSize) + (y * cellSize + cellSize / 2) * width];
+		if (x < 0 || x >= width / cellSize || y < 0 || y >= height / cellSize)
+			return 1;
+		return tiles[(x * cellSize) + (y * cellSize) * width];
+	}
+
+	public Entity getCellEntity(int x, int y) {
+		for (Entity e : entities) {
+			if ((int) e.getX() / tileSize / cellSize == x
+					&& (int) e.getY() / tileSize / cellSize == y) {
+				return e;
+			}
+		}
+		return null;
+	}
+
+	public int getSwitchGateID(SwitchGate sg) {
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			if (switchGates[i].equals(sg)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public SwitchGate getCellSwitch(int x, int y) {
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			for (int j = 0; j < switchGates[i].getSwitchSize(); j++) {
+				if (switchGates[i].getNearSwitch(x, y)) {
+					return switchGates[i];
+				}
+			}
+		}
+		return null;
+	}
+
+	public SwitchGate getCellGate(int x, int y) {
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			for (int j = 0; j < switchGates[i].getGateSize(); j++) {
+				if (switchGates[i].getNearGate(x, y)) {
+					return switchGates[i];
+				}
+			}
+		}
+		return null;
 	}
 
 	public void setTile(int id, int x, int y) {
@@ -207,9 +280,11 @@ public class Level {
 		case 0xFFFFFF:
 			tiles[x + y * width] = 0;
 			break;
+		case 1:
 		case 0xFF:
 			tiles[x + y * width] = 1;
 			break;
+		case 2:
 		case 0xAA:
 			tiles[x + y * width] = 2;
 			break;
@@ -273,13 +348,13 @@ public class Level {
 			if (switchGates[i] == null)
 				continue;
 			if (switchGates[i].getOpen()) {
-				screen.drawShadedRectangle(0xDD00, 0xBB00, 0x9900,
-						i * (tileSize / 2 + 1), screen.getHeight()
-								- tileSize / 2 * 2, tileSize / 2, tileSize / 2);
+				screen.drawShadedRectangle(0xDD00, 0xBB00, 0x9900, i
+						* (tileSize / 2 + 1), screen.getHeight() - tileSize / 2
+						* 2, tileSize / 2, tileSize / 2);
 			} else {
-				screen.drawShadedRectangle(0xDD0000, 0xBB0000, 0x990000,
-						i * (tileSize / 2 + 1), screen.getHeight()
-								- tileSize / 2 * 2, tileSize / 2, tileSize / 2);
+				screen.drawShadedRectangle(0xDD0000, 0xBB0000, 0x990000, i
+						* (tileSize / 2 + 1), screen.getHeight() - tileSize / 2
+						* 2, tileSize / 2, tileSize / 2);
 			}
 		}
 
