@@ -486,14 +486,14 @@ public class Level {
 		if (currentLevel == 5
 				&& System.currentTimeMillis() - startTime < tipLength) {
 			screen.drawString(
-					"No more tutorials!".substring(
+					"Collect USB-sticks for score!".substring(
 							0,
-							(int) Math.min(18
+							(int) Math.min(29
 									* (System.currentTimeMillis() - startTime)
-									/ (tipLength / 2), 18)), 8, 8);
-		} else if (currentLevel == 4) {
+									/ (tipLength / 2), 29)), 8, 8);
+		} else if (currentLevel == 5) {
 			screen.drawString(
-					"Switches can also  switch off. (Also, bullets aren't     laser-resistant)",
+					"Collect USB-sticks for score!",
 					8, 8, 1, (float) (1.0 / ((System.currentTimeMillis()
 							- tipLength - startTime) / 500.0) - 0.2));
 		}
