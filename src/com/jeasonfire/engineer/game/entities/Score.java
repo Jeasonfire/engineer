@@ -17,7 +17,7 @@ public class Score extends Entity {
 		for (int i = 0; i < level.entities.size(); i++) {
 			if (level.entities.get(i) instanceof Player
 					&& level.entities.get(i).collision(this)) {
-				level.addScore(20);
+				level.addScore(1);
 				level.entities.remove(this);
 				Sound.PICKUP.play();
 			}
