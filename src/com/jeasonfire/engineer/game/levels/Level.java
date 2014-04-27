@@ -25,20 +25,30 @@ public class Level {
 	public boolean victory = false, gameover = false;
 
 	private class SwitchGate {
-		private Point switchPoint;
-		private Point gatePoint;
+		private ArrayList<Point> switchPoint;
+		private ArrayList<Point> gatePoint;
 		private boolean open = false;
 
-		public void setSwitch(int x, int y) {
-			switchPoint = new Point(x, y);
+		public SwitchGate() {
+			switchPoint = new ArrayList<Point>();
+			gatePoint = new ArrayList<Point>();
 		}
 
-		public void setGate(int x, int y) {
-			gatePoint = new Point(x, y);
+		public void addSwitch(int x, int y) {
+			switchPoint.add(new Point(x, y));
+		}
+
+		public void addGate(int x, int y) {
+			gatePoint.add(new Point(x, y));
 		}
 
 		public boolean getNearSwitch(int x, int y) {
-			return switchPoint.x == x && switchPoint.y == y;
+			for (Point p : switchPoint) {
+				if (p.x == x && p.y == y) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public void setOpen(boolean open) {
@@ -49,20 +59,28 @@ public class Level {
 			return open;
 		}
 
-		public int getSwitchX() {
-			return switchPoint.x;
+		public int getSwitchX(int index) {
+			return switchPoint.get(index).x;
 		}
 
-		public int getSwitchY() {
-			return switchPoint.y;
+		public int getSwitchY(int index) {
+			return switchPoint.get(index).y;
 		}
 
-		public int getGateX() {
-			return gatePoint.x;
+		public int getSwitchSize() {
+			return switchPoint.size();
 		}
 
-		public int getGateY() {
-			return gatePoint.y;
+		public int getGateX(int index) {
+			return gatePoint.get(index).x;
+		}
+
+		public int getGateY(int index) {
+			return gatePoint.get(index).y;
+		}
+
+		public int getGateSize() {
+			return gatePoint.size();
 		}
 	};
 
@@ -136,14 +154,14 @@ public class Level {
 	public void setSwitch(int id, int x, int y) {
 		if (switchGates[id] == null)
 			switchGates[id] = new SwitchGate();
-		switchGates[id].setSwitch(x, y);
+		switchGates[id].addSwitch(x, y);
 		setCell(0, x, y);
 	}
 
 	public void setGate(int id, int x, int y) {
 		if (switchGates[id] == null)
 			switchGates[id] = new SwitchGate();
-		switchGates[id].setGate(x, y);
+		switchGates[id].addGate(x, y);
 	}
 
 	public void setNextLevel(int x, int y) {
@@ -159,7 +177,7 @@ public class Level {
 				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
 				* tileSize / 2 - tileSize / 2));
 	}
-	
+
 	public void setTurret(int x, int y) {
 		setCell(0, x, y);
 		entities.add(new Turret(x * cellSize * tileSize + cellSize * tileSize
@@ -216,35 +234,39 @@ public class Level {
 		}
 		for (SwitchGate sg : switchGates) {
 			if (sg != null) {
-				if (sg.getOpen()) {
-					screen.drawShadedRectangle(0xCC00, 0xAA00, 0x8800,
-							sg.getSwitchX() * cellSize * tileSize + cellSize
-									* tileSize / 2 - tileSize / 2 - xScroll,
-							sg.getSwitchY() * cellSize * tileSize + cellSize
-									* tileSize / 2 - tileSize / 2 - yScroll,
-							tileSize, tileSize);
-				} else {
-					screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000,
-							sg.getSwitchX() * cellSize * tileSize + cellSize
-									* tileSize / 2 - tileSize / 2 - xScroll,
-							sg.getSwitchY() * cellSize * tileSize + cellSize
-									* tileSize / 2 - tileSize / 2 - yScroll,
-							tileSize, tileSize);
+				for (int i = 0; i < sg.getSwitchSize(); i++) {
+					if (sg.getOpen()) {
+						screen.drawShadedRectangle(0xCC00, 0xAA00, 0x8800,
+								sg.getSwitchX(i) * cellSize * tileSize
+										+ cellSize * tileSize / 2 - tileSize
+										/ 2 - xScroll,
+								sg.getSwitchY(i) * cellSize * tileSize
+										+ cellSize * tileSize / 2 - tileSize
+										/ 2 - yScroll, tileSize, tileSize);
+					} else {
+						screen.drawShadedRectangle(0xCC0000, 0xAA0000,
+								0x880000, sg.getSwitchX(i) * cellSize
+										* tileSize + cellSize * tileSize / 2
+										- tileSize / 2 - xScroll,
+								sg.getSwitchY(i) * cellSize * tileSize
+										+ cellSize * tileSize / 2 - tileSize
+										/ 2 - yScroll, tileSize, tileSize);
+					}
 				}
 			}
 		}
 		for (int i = 0; i < entities.size(); i++) {
 			if (entities.get(i) instanceof Player) {
-				xScroll = (int) (entities.get(i).getX() - screen.getWidth() / 2 + entities.get(i)
-						.getWidth() / 2);
+				xScroll = (int) (entities.get(i).getX() - screen.getWidth() / 2 + entities
+						.get(i).getWidth() / 2);
 				xScrollCenter = entities.get(i).getX();
-				yScroll = (int) (entities.get(i).getY() - screen.getHeight() / 2 + entities.get(i)
-						.getHeight() / 2);
+				yScroll = (int) (entities.get(i).getY() - screen.getHeight()
+						/ 2 + entities.get(i).getHeight() / 2);
 				yScrollCenter = entities.get(i).getY();
 			}
 			entities.get(i).draw(screen, (int) xScroll, (int) yScroll);
 		}
-		
+
 		if (currentLevel == 2) {
 			screen.drawString("Shift to run!", 8, 8);
 		}
@@ -269,11 +291,13 @@ public class Level {
 		}
 		for (SwitchGate sg : switchGates) {
 			if (sg != null) {
-				if (sg.getOpen()) {
-					setCell(0, sg.getGateX(), sg.getGateY());
-				}
-				if (!sg.getOpen()) {
-					setCell(0xAA, sg.getGateX(), sg.getGateY());
+				for (int i = 0; i < sg.getGateSize(); i++) {
+					if (sg.getOpen()) {
+						setCell(0, sg.getGateX(i), sg.getGateY(i));
+					}
+					if (!sg.getOpen()) {
+						setCell(0xAA, sg.getGateX(i), sg.getGateY(i));
+					}
 				}
 			}
 		}
