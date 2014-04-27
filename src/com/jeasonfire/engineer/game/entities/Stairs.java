@@ -13,8 +13,8 @@ public class Stairs extends Entity {
 	}
 
 	public void update(float delta, final Level level) {
-		for (Entity e : level.entities) {
-			if (e instanceof Player && e.collision(this)) {
+		for (int i = 0; i < level.entities.size(); i++) {
+			if (level.entities.get(i) instanceof Player && level.entities.get(i).collision(this)) {
 				level.nextLevel();
 			}
 		}

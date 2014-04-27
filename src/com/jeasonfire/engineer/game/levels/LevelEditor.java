@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import com.jeasonfire.engineer.Input;
 import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
+import com.jeasonfire.engineer.game.entities.Score;
 import com.jeasonfire.engineer.game.entities.Stairs;
 import com.jeasonfire.engineer.game.entities.Turret;
 import com.jeasonfire.engineer.graphics.HexColor;
@@ -85,10 +86,20 @@ public class LevelEditor extends Level {
 			removeCellEntity(cellX, cellY);
 			removeCellGate(cellX, cellY);
 			removeCellSwitch(cellX, cellY);
+			setScore(cellX, cellY);
+			break;
+		case 8:
+			if (getCellEntity(cellX, cellY) != null
+					|| getCellSwitch(cellX, cellY) != null
+					|| getCellGate(cellX, cellY) != null)
+				break;
+			removeCellEntity(cellX, cellY);
+			removeCellGate(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			setSwitch(Integer.parseInt(JOptionPane.showInputDialog(null,
 					"Enter switch ID:")), cellX, cellY);
 			break;
-		case 8:
+		case 9:
 			if (getCellEntity(cellX, cellY) != null
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
@@ -131,6 +142,8 @@ public class LevelEditor extends Level {
 				return 0xFFAA0000;
 			if (e instanceof Player)
 				return 0xFF00FF00;
+			if (e instanceof Score)
+				return 0xFFFFFF00;
 		}
 		if (getCellSwitch(x, y) != null) {
 			return HexColor.getHex(0xFF, getCellSwitch(x, y).id, 0) + 0xFF000000;
@@ -161,6 +174,8 @@ public class LevelEditor extends Level {
 			return Turret.SPRITE;
 		case 6:
 			return Player.SPRITE;
+		case 7:
+			return Score.SPRITE;
 		default:
 			return new Sprite(tileSize, tileSize);
 		}
@@ -193,16 +208,16 @@ public class LevelEditor extends Level {
 				}
 			}
 		}
-		if (currentTile < 7) {
+		if (currentTile < 8) {
 			screen.drawSprite(getCurrentCellSprite(currentTile), cursorX
 					* tileSize - xScroll, cursorY * tileSize - yScroll, 1, 0.4f);
-		} else if (currentTile == 7) {
+		} else if (currentTile == 8) {
 			screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000, cursorX
 					* tileSize - xScroll, cursorY * tileSize - yScroll,
 					tileSize, tileSize, 0.4f);
 			screen.drawString("S?", cursorX * tileSize - xScroll, cursorY
 					* tileSize - yScroll + tileSize / 4, 1, 0.4f);
-		} else if (currentTile == 8) {
+		} else if (currentTile == 9) {
 			screen.drawShadedRectangle(0xCC0000, 0xAA0000, 0x880000, cursorX
 					* tileSize - xScroll, cursorY * tileSize - yScroll,
 					tileSize, tileSize, 0.4f);
@@ -238,6 +253,9 @@ public class LevelEditor extends Level {
 		}
 		if (Input.keys[KeyEvent.VK_8]) {
 			currentTile = 8;
+		}
+		if (Input.keys[KeyEvent.VK_9]) {
+			currentTile = 9;
 		}
 
 		if (Input.mouseDown) {

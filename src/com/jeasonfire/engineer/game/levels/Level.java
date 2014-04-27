@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
+import com.jeasonfire.engineer.game.entities.Score;
 import com.jeasonfire.engineer.game.entities.Stairs;
 import com.jeasonfire.engineer.game.entities.Turret;
 import com.jeasonfire.engineer.graphics.HexColor;
@@ -23,7 +24,7 @@ public class Level {
 	private float transparencyRange = 4;
 	private long startTime = 0;
 	private long tipLength = 5000;
-	
+
 	public int score = 0;
 	public boolean victory = false, gameover = false;
 
@@ -163,6 +164,8 @@ public class Level {
 				int id = load.getPixel(x, y) & 0xFFFFFF;
 				if (id == 0xFFFFFF) {
 					setNextLevel(x, y);
+				} else if (id == 0xFFFF00) {
+					setScore(x, y);
 				} else if (HexColor.getRed(id) == 0xFF) {
 					if (HexColor.getGreen(id) > 0)
 						setSwitch(HexColor.getGreen(id), x, y);
@@ -229,6 +232,13 @@ public class Level {
 	public void setTurret(int x, int y) {
 		setCell(0, x, y);
 		entities.add(new Turret(x * cellSize * tileSize + cellSize * tileSize
+				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
+				* tileSize / 2 - tileSize / 2));
+	}
+
+	public void setScore(int x, int y) {
+		setCell(0, x, y);
+		entities.add(new Score(x * cellSize * tileSize + cellSize * tileSize
 				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
 				* tileSize / 2 - tileSize / 2));
 	}
@@ -333,7 +343,7 @@ public class Level {
 			break;
 		}
 	}
-	
+
 	public void addScore(int amt) {
 		score += amt;
 	}
@@ -395,15 +405,17 @@ public class Level {
 			if (switchGates[i] == null)
 				continue;
 			if (switchGates[i].getOpen()) {
-				screen.drawShadedRectangle(0xDD00, 0xBB00, 0x9900, i
-						* (tileSize / 2 + 1), screen.getHeight() - tileSize / 2
-						* 2, tileSize / 2, tileSize / 2);
+				screen.drawShadedRectangle(0xDD00, 0xBB00, 0x9900, 80 + i
+						* (tileSize / 2 + 1), screen.getHeight() - tileSize,
+						tileSize / 2, tileSize / 2);
 			} else {
-				screen.drawShadedRectangle(0xDD0000, 0xBB0000, 0x990000, i
-						* (tileSize / 2 + 1), screen.getHeight() - tileSize / 2
-						* 2, tileSize / 2, tileSize / 2);
+				screen.drawShadedRectangle(0xDD0000, 0xBB0000, 0x990000, 80 + i
+						* (tileSize / 2 + 1), screen.getHeight() - tileSize,
+						tileSize / 2, tileSize / 2);
 			}
 		}
+		screen.drawString("Score: " + score, 8, screen.getHeight() - 25);
+		screen.drawString("Switches: ", 8, screen.getHeight() - tileSize);
 
 		if (currentLevel == 1
 				&& System.currentTimeMillis() - startTime < tipLength) {
