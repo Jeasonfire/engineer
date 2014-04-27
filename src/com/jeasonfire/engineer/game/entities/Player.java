@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.audio.Sound;
 import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
@@ -49,6 +50,13 @@ public class Player extends Entity {
 			return 2;
 		return 0;
 	}
+	
+	private void playFootstep() {
+		if (xIndex == 0)
+			Sound.FOOTSTEP1.play();
+		if (xIndex == 1)
+			Sound.FOOTSTEP2.play();
+	}
 
 	public void update(float delta, Level level) {
 		if (System.currentTimeMillis() - lastFrameChange > (150 - speed) * 2) {
@@ -56,6 +64,9 @@ public class Player extends Entity {
 			xIndex++;
 			if (xIndex > 3) {
 				xIndex = 0;
+			}
+			if (movingX || movingY) {
+				playFootstep();
 			}
 		}
 
