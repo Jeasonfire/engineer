@@ -269,50 +269,99 @@ public class Level {
 			}
 			entities.get(i).draw(screen, (int) xScroll, (int) yScroll);
 		}
+		for (int i = 0; i < switchGates.length; i++) {
+			if (switchGates[i] == null)
+				continue;
+			if (switchGates[i].getOpen()) {
+				screen.drawShadedRectangle(0xDD00, 0xBB00, 0x9900,
+						i * (tileSize / 2 + 1), screen.getHeight()
+								- tileSize / 2 * 2, tileSize / 2, tileSize / 2);
+			} else {
+				screen.drawShadedRectangle(0xDD0000, 0xBB0000, 0x990000,
+						i * (tileSize / 2 + 1), screen.getHeight()
+								- tileSize / 2 * 2, tileSize / 2, tileSize / 2);
+			}
+		}
 
-		if (currentLevel == 1 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("Switches turn      lasers off.".substring(0,
-					(int) Math.min(30 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 30)),
-					8, 8);
+		if (currentLevel == 1
+				&& System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString(
+					"Switches turn      lasers off.".substring(
+							0,
+							(int) Math.min(30
+									* (System.currentTimeMillis() - startTime)
+									/ (tipLength / 2), 30)), 8, 8);
 		} else if (currentLevel == 1) {
-			screen.drawString("Switches turn      lasers off.", 8, 8, 1,
+			screen.drawString(
+					"Switches turn      lasers off.",
+					8,
+					8,
+					1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
-		
-		if (currentLevel == 2 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("Shift to run!".substring(0,
-					(int) Math.min(13 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 13)),
-					8, 8);
+
+		if (currentLevel == 2
+				&& System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString(
+					"Shift to run!".substring(
+							0,
+							(int) Math.min(13
+									* (System.currentTimeMillis() - startTime)
+									/ (tipLength / 2), 13)), 8, 8);
 		} else if (currentLevel == 2) {
-			screen.drawString("Shift to run!", 8, 8, 1,
+			screen.drawString(
+					"Shift to run!",
+					8,
+					8,
+					1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
-		
-		if (currentLevel == 3 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("Bullets also kill  turrets.".substring(0,
-					(int) Math.min(27 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 27)),
-					8, 8);
+
+		if (currentLevel == 3
+				&& System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString(
+					"Bullets also kill  turrets.".substring(
+							0,
+							(int) Math.min(27
+									* (System.currentTimeMillis() - startTime)
+									/ (tipLength / 2), 27)), 8, 8);
 		} else if (currentLevel == 3) {
-			screen.drawString("Bullets also kill  turrets.", 8, 8, 1,
+			screen.drawString(
+					"Bullets also kill  turrets.",
+					8,
+					8,
+					1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
-		
-		if (currentLevel == 4 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("Switches can also  switch off. (Also, bullets aren't     laser-resistant)".substring(0,
-					(int) Math.min(73 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 73)),
-					8, 8);
+
+		if (currentLevel == 4
+				&& System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString(
+					"Switches can also  switch off. (Also, bullets aren't     laser-resistant)".substring(
+							0,
+							(int) Math.min(73
+									* (System.currentTimeMillis() - startTime)
+									/ (tipLength / 2), 73)), 8, 8);
 		} else if (currentLevel == 4) {
-			screen.drawString("Switches can also  switch off. (Also, bullets aren't     laser-resistant)", 8, 8, 1,
-					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
+			screen.drawString(
+					"Switches can also  switch off. (Also, bullets aren't     laser-resistant)",
+					8, 8, 1, (float) (1.0 / ((System.currentTimeMillis()
+							- tipLength - startTime) / 500.0) - 0.2));
 		}
-		
-		if (currentLevel == 5 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("No more tutorials!".substring(0,
-					(int) Math.min(18 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 18)),
-					8, 8);
+
+		if (currentLevel == 5
+				&& System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString(
+					"No more tutorials!".substring(
+							0,
+							(int) Math.min(18
+									* (System.currentTimeMillis() - startTime)
+									/ (tipLength / 2), 18)), 8, 8);
 		} else if (currentLevel == 4) {
-			screen.drawString("Switches can also  switch off. (Also, bullets aren't     laser-resistant)", 8, 8, 1,
-					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
+			screen.drawString(
+					"Switches can also  switch off. (Also, bullets aren't     laser-resistant)",
+					8, 8, 1, (float) (1.0 / ((System.currentTimeMillis()
+							- tipLength - startTime) / 500.0) - 0.2));
 		}
 	}
 
