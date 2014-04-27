@@ -6,12 +6,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-public class Input implements KeyListener, MouseListener, MouseMotionListener {
+public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	public static boolean[] keys = new boolean[1024];
 	public static boolean mouseDown = false;
 	public static Point msp = new Point(0, 0), mspWin = new Point(0, 0);
 	public static int lastKey = -1;
+	public static int scroll = 0;
 	private Game game;
 	
 	public Input(Game game) {
@@ -48,6 +51,10 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		if (e.getKeyCode() == lastKey) {
 			lastKey = -1;
 		}
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		scroll = e.getScrollAmount() / e.getUnitsToScroll();
 	}
 
 	/**

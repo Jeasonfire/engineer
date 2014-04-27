@@ -43,6 +43,7 @@ public class Game extends Canvas implements Runnable {
 		addKeyListener(input);
 		addMouseListener(input);
 		addMouseMotionListener(input);
+		addMouseWheelListener(input);
 		screen = new IntroScreen(this);
 		
 		try {

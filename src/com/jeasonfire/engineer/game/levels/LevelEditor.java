@@ -257,6 +257,17 @@ public class LevelEditor extends Level {
 		if (Input.keys[KeyEvent.VK_9]) {
 			currentTile = 9;
 		}
+		
+		if (Input.scroll != 0) {
+			currentTile += Input.scroll;
+			if (currentTile < 1) {
+				currentTile = 9;
+			}
+			if (currentTile > 9) {
+				currentTile = 1;
+			}
+			Input.scroll = 0;
+		}
 
 		if (Input.mouseDown) {
 			placeCell(cursorX, cursorY, currentTile);
