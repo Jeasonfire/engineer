@@ -3,6 +3,8 @@ package com.jeasonfire.engineer.game.levels;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
 import com.jeasonfire.engineer.game.entities.Score;
@@ -25,7 +27,7 @@ public class Level {
 	private long startTime = 0;
 	private long tipLength = 5000;
 
-	public int score = 0;
+	public int score = 0, lives = 3, maxLives = 3;
 	public boolean victory = false, gameover = false;
 
 	protected class SwitchGate {
@@ -133,7 +135,21 @@ public class Level {
 	};
 
 	public Level() {
-		generate(currentLevel);
+		if (!(this instanceof LevelEditor) && JOptionPane.showOptionDialog(null, "Skip tutorials?", "Tutorial",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				null, null) == JOptionPane.YES_OPTION) {
+			try {
+				maxLives = Integer.parseInt(JOptionPane.showInputDialog(null,
+						"How many lives? (enter a numerical value)"));
+			} catch (Exception ex) {
+				maxLives = 3;
+			}
+			lives = maxLives;
+			currentLevel = 6;
+		}
+		if (!(this instanceof LevelEditor)) {
+			generate(currentLevel);
+		}
 	}
 
 	public void generate(int width, int height, int type) {
@@ -188,6 +204,8 @@ public class Level {
 		generateNewLevel = true;
 		if (currentLevel > maxLevels)
 			victory = true;
+		if (lives <= 0)
+			gameover = true;
 	}
 
 	public void resetLevel() {
@@ -414,6 +432,17 @@ public class Level {
 						tileSize / 2, tileSize / 2);
 			}
 		}
+		for (int i = 0; i < maxLives; i++) {
+			screen.drawShadedRectangle(0xDDDD00, 0xBBBB00, 0x999900,
+					screen.getWidth() - tileSize / 2 * maxLives - tileSize / 2
+							+ i * (tileSize / 2 + 1), tileSize / 2,
+					tileSize / 2, tileSize / 2);
+			if (i < lives) {
+				screen.drawString("*", screen.getWidth() - tileSize / 2
+						* maxLives - tileSize / 2 + i * (tileSize / 2 + 1),
+						tileSize / 2);
+			}
+		}
 		screen.drawString("Score: " + score, 8, screen.getHeight() - 25);
 		screen.drawString("Switches: ", 8, screen.getHeight() - tileSize);
 
@@ -494,8 +523,10 @@ public class Level {
 		} else if (currentLevel == 5) {
 			screen.drawString(
 					"Collect USB-sticks for score!",
-					8, 8, 1, (float) (1.0 / ((System.currentTimeMillis()
-							- tipLength - startTime) / 500.0) - 0.2));
+					8,
+					8,
+					1,
+					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
 	}
 

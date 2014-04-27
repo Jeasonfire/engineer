@@ -28,6 +28,8 @@ public class Bullet extends Entity {
 					&& collision(level.entities.get(i))) {
 				level.resetLevel();
 				Sound.DEATH.play();
+				if (level.currentLevel > 5)
+					level.lives--;
 				break;
 			} else if (level.entities.get(i) instanceof Turret
 					&& collision(level.entities.get(i))
