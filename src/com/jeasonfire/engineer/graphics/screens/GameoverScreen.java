@@ -37,6 +37,14 @@ public class GameoverScreen extends Screen {
 
 	public void update(float delta) {
 		/**
+		 * Music
+		 */
+		if (Sound.justMusicOn) {
+			Sound.justMusicOn = false;
+			Sound.MUSIC1.loop();
+		}
+		
+		/**
 		 * Mouse
 		 */
 		if (backBox.contains(Input.msp)) {

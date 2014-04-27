@@ -3,10 +3,15 @@ package com.jeasonfire.engineer;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import com.jeasonfire.engineer.audio.Sound;
 import com.jeasonfire.engineer.graphics.screens.IntroScreen;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 
@@ -22,6 +27,11 @@ public class Game extends Canvas implements Runnable {
 	private Screen screen;
 	private float screenChange = 0;
 	
+	// Sounds
+	private BufferedImage soundIcon, musicIcon, redX;
+	private Rectangle soundBox, musicBox;
+	private long justClicked = 0;
+	
 	public Game(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -34,6 +44,16 @@ public class Game extends Canvas implements Runnable {
 		addMouseListener(input);
 		addMouseMotionListener(input);
 		screen = new IntroScreen(this);
+		
+		try {
+			soundIcon = ImageIO.read(Game.class.getResource("graphics/sprites/soundIcon.png"));
+			musicIcon = ImageIO.read(Game.class.getResource("graphics/sprites/musicIcon.png"));
+			redX = ImageIO.read(Game.class.getResource("graphics/sprites/redX.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		soundBox = new Rectangle(getWidth() - 18, getHeight() - 36, 16, 16);
+		musicBox = new Rectangle(getWidth() - 18, getHeight() - 18, 16, 16);
 	}
 
 	public void update(float delta) {
@@ -41,11 +61,25 @@ public class Game extends Canvas implements Runnable {
 			screenChange -= delta;
 			return;
 		}
+		if (soundBox.contains(Input.mspWin) && Input.mouseDown && System.currentTimeMillis() - justClicked > 250) {
+			Sound.toggleSound();
+			Input.mouseDown = false;
+			justClicked = System.currentTimeMillis();
+			System.out.println("Sound! (" + Sound.SOUND_ON + ")");
+		}
+		if (musicBox.contains(Input.mspWin) && Input.mouseDown && System.currentTimeMillis() - justClicked > 250) {
+			Sound.toggleMusic();
+			Input.mouseDown = false;
+			justClicked = System.currentTimeMillis();
+			System.out.println("Music! (" + Sound.MUSIC_ON + ")");
+		}
 		screen.update(delta);
 		if (screen.nextScreen != null) {
 			screen = screen.nextScreen;
 			screenChange = 0.2f;
 		}
+		soundBox = new Rectangle(getWidth() - 18, getHeight() - 36, 16, 16);
+		musicBox = new Rectangle(getWidth() - 18, getHeight() - 18, 16, 16);
 	}
 
 	public void clear() {
@@ -81,6 +115,12 @@ public class Game extends Canvas implements Runnable {
 					* height) / 2, getWidth(), getWidth() / width * height,
 					null);
 		}
+		g.drawImage(soundIcon, soundBox.x, soundBox.y, soundBox.width, soundBox.height, null);
+		if (!Sound.SOUND_ON)
+			g.drawImage(redX, soundBox.x, soundBox.y, soundBox.width, soundBox.height, null);
+		g.drawImage(musicIcon, musicBox.x, musicBox.y, musicBox.width, musicBox.height, null);
+		if (!Sound.MUSIC_ON)
+			g.drawImage(redX, musicBox.x, musicBox.y, musicBox.width, musicBox.height, null);
 		g.dispose();
 		bs.show();
 	}

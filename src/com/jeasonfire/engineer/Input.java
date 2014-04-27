@@ -10,7 +10,7 @@ import java.awt.event.MouseMotionListener;
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public static boolean[] keys = new boolean[1024];
 	public static boolean mouseDown = false;
-	public static Point msp = new Point(0, 0);
+	public static Point msp = new Point(0, 0), mspWin = new Point(0, 0);
 	public static int lastKey = -1;
 	private Game game;
 	
@@ -21,11 +21,13 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public void mouseDragged(MouseEvent e) {
 		msp.x = e.getX() / (game.getWidth() / game.getGameWidth());
 		msp.y = e.getY() / (game.getHeight() / game.getGameHeight());
+		mspWin = e.getPoint();
 	}
 
 	public void mouseMoved(MouseEvent e) {
 		msp.x = e.getX() / (game.getWidth() / game.getGameWidth());
 		msp.y = e.getY() / (game.getHeight() / game.getGameHeight());
+		mspWin = e.getPoint();
 	}
 
 	public void mousePressed(MouseEvent e) {

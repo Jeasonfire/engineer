@@ -19,6 +19,14 @@ public class GameScreen extends Screen {
 	}
 
 	public void update(float delta) {
+		/**
+		 * Music
+		 */
+		if (Sound.justMusicOn) {
+			Sound.justMusicOn = false;
+			Sound.MUSIC2.loop();
+		}
+		
 		state.update(delta);
 		if (state.nextState != null) {
 			state = state.nextState;
