@@ -54,7 +54,7 @@ public class Player extends Entity {
 	private void playFootstep() {
 		if (xIndex == 0)
 			Sound.FOOTSTEP1.play();
-		if (xIndex == 1)
+		if (xIndex == 2)
 			Sound.FOOTSTEP2.play();
 	}
 
