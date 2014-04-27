@@ -20,7 +20,7 @@ public class LevelState extends GameState {
 	public void update(float delta) {
 		level.update(delta);
 		if (level.victory) {
-			screen.nextScreen = new VictoryScreen(screen.game);
+			screen.nextScreen = new VictoryScreen(screen.game, level.score);
 		}
 		if (level.gameover) {
 			screen.nextScreen = new GameoverScreen(screen.game);

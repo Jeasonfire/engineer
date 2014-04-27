@@ -23,7 +23,8 @@ public class Level {
 	private float transparencyRange = 4;
 	private long startTime = 0;
 	private long tipLength = 5000;
-
+	
+	public int score = 0;
 	public boolean victory = false, gameover = false;
 
 	protected class SwitchGate {
@@ -331,6 +332,10 @@ public class Level {
 			tiles[x + y * width] = 2;
 			break;
 		}
+	}
+	
+	public void addScore(int amt) {
+		score += amt;
 	}
 
 	public void draw(Screen screen) {
