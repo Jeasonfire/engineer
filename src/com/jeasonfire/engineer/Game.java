@@ -20,7 +20,8 @@ public class Game extends Canvas implements Runnable {
 	private Thread thread;
 	private Input input;
 	private Screen screen;
-
+	private float screenChange = 0;
+	
 	public Game(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -36,9 +37,14 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void update(float delta) {
+		if (screenChange > 0) {
+			screenChange -= delta;
+			return;
+		}
 		screen.update(delta);
 		if (screen.nextScreen != null) {
 			screen = screen.nextScreen;
+			screenChange = 0.2f;
 		}
 	}
 
