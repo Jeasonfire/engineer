@@ -7,7 +7,7 @@ public class Sound {
 	public static Sound DEATH = new Sound("death.wav"), FOOTSTEP1 = new Sound(
 			"footstep1.wav"), FOOTSTEP2 = new Sound("footstep2.wav"),
 			MUSIC1 = new Sound("music1.wav"), MUSIC2 = new Sound("music2.wav"),
-			PICKUP = new Sound("pickup.wav"), SHOOT = new Sound("shoot.wav");
+			PICKUP = new Sound("pickup.wav");
 	public static boolean MUSIC_ON = true, SOUND_ON = true, justSoundOn = false, justMusicOn = false;
 	
 	private AudioClip clip;
@@ -57,7 +57,6 @@ public class Sound {
 		MUSIC1.stop();
 		MUSIC2.stop();
 		PICKUP.stop();
-		SHOOT.stop();
 	}
 
 	public static void toggleSound() {
@@ -67,7 +66,6 @@ public class Sound {
 			FOOTSTEP1.stop();
 			FOOTSTEP2.stop();
 			PICKUP.stop();
-			SHOOT.stop();
 		}
 		if (SOUND_ON)
 			justSoundOn = true;
