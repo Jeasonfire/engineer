@@ -272,31 +272,34 @@ public class Level {
 
 		if (currentLevel == 1 && System.currentTimeMillis() - startTime < tipLength) {
 			screen.drawString("Switches turn      lasers off.".substring(0,
-					(int) (30 * (System.currentTimeMillis() - startTime) / tipLength)),
+					(int) Math.min(30 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 30)),
 					8, 8);
 		} else if (currentLevel == 1) {
 			screen.drawString("Switches turn      lasers off.", 8, 8, 1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
+		
 		if (currentLevel == 2 && System.currentTimeMillis() - startTime < tipLength) {
 			screen.drawString("Shift to run!".substring(0,
-					(int) (13 * (System.currentTimeMillis() - startTime) / tipLength)),
+					(int) Math.min(13 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 13)),
 					8, 8);
 		} else if (currentLevel == 2) {
 			screen.drawString("Shift to run!", 8, 8, 1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
+		
 		if (currentLevel == 3 && System.currentTimeMillis() - startTime < tipLength) {
 			screen.drawString("Bullets also kill  turrets.".substring(0,
-					(int) (27 * (System.currentTimeMillis() - startTime) / tipLength)),
+					(int) Math.min(27 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 27)),
 					8, 8);
 		} else if (currentLevel == 3) {
 			screen.drawString("Bullets also kill  turrets.", 8, 8, 1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
+		
 		if (currentLevel == 4 && System.currentTimeMillis() - startTime < tipLength) {
 			screen.drawString("Switches can also  switch off.".substring(0,
-					(int) (30 * (System.currentTimeMillis() - startTime) / tipLength)),
+					(int) Math.min(30 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 30)),
 					8, 8);
 		} else if (currentLevel == 4) {
 			screen.drawString("Switches can also  switch off.", 8, 8, 1,
