@@ -16,11 +16,13 @@ public class Level {
 	public int[] tiles;
 	public int width, height;
 	public ArrayList<Entity> entities;
-	public int currentLevel = 1, maxLevels = 3;
+	public int currentLevel = 1, maxLevels = 4;
 	private boolean generateNewLevel = true;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
+	private long startTime = 0;
+	private long tipLength = 3000;
 
 	public boolean victory = false, gameover = false;
 
@@ -130,6 +132,7 @@ public class Level {
 				}
 			}
 		}
+		startTime = 0;
 	}
 
 	public void nextLevel() {
@@ -267,8 +270,37 @@ public class Level {
 			entities.get(i).draw(screen, (int) xScroll, (int) yScroll);
 		}
 
-		if (currentLevel == 2) {
-			screen.drawString("Shift to run!", 8, 8);
+		if (currentLevel == 1 && System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString("Switches turn      lasers off.".substring(0,
+					(int) (30 * (System.currentTimeMillis() - startTime) / tipLength)),
+					8, 8);
+		} else if (currentLevel == 1) {
+			screen.drawString("Switches turn      lasers off.", 8, 8, 1,
+					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
+		}
+		if (currentLevel == 2 && System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString("Shift to run!".substring(0,
+					(int) (13 * (System.currentTimeMillis() - startTime) / tipLength)),
+					8, 8);
+		} else if (currentLevel == 2) {
+			screen.drawString("Shift to run!", 8, 8, 1,
+					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
+		}
+		if (currentLevel == 3 && System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString("Bullets also kill  turrets.".substring(0,
+					(int) (27 * (System.currentTimeMillis() - startTime) / tipLength)),
+					8, 8);
+		} else if (currentLevel == 3) {
+			screen.drawString("Bullets also kill  turrets.", 8, 8, 1,
+					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
+		}
+		if (currentLevel == 4 && System.currentTimeMillis() - startTime < tipLength) {
+			screen.drawString("Switches can also  switch off.".substring(0,
+					(int) (30 * (System.currentTimeMillis() - startTime) / tipLength)),
+					8, 8);
+		} else if (currentLevel == 4) {
+			screen.drawString("Switches can also  switch off.", 8, 8, 1,
+					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
 	}
 
@@ -286,6 +318,9 @@ public class Level {
 	public void update(float delta) {
 		if (generateNewLevel)
 			generate(currentLevel);
+		if (startTime <= 0) {
+			startTime = System.currentTimeMillis();
+		}
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update(delta, this);
 		}
