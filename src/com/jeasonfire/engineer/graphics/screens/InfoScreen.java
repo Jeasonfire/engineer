@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Game;
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.audio.Sound;
 
 public class InfoScreen extends Screen {
 	private static int BACK = 0, NOTHING = 1;
@@ -14,6 +15,7 @@ public class InfoScreen extends Screen {
 	public InfoScreen(Game game) {
 		super(game);
 		backBox = new Rectangle(0, height - 12, width, 8);
+		Sound.MUSIC1.loop();
 	}
 
 	public void draw() {

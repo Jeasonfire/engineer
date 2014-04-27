@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Game;
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.audio.Sound;
 
 public class VictoryScreen extends Screen {
 	private static int BACK = 0, NOTHING = 1;
@@ -16,6 +17,7 @@ public class VictoryScreen extends Screen {
 		super(game);
 		this.score = score;
 		backBox = new Rectangle(0, height - 12, width, 8);
+		Sound.MUSIC1.loop();
 	}
 
 	public void draw() {

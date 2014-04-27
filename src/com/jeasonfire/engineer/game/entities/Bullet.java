@@ -2,6 +2,7 @@ package com.jeasonfire.engineer.game.entities;
 
 import java.awt.Rectangle;
 
+import com.jeasonfire.engineer.audio.Sound;
 import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
@@ -26,6 +27,7 @@ public class Bullet extends Entity {
 			if (level.entities.get(i) instanceof Player
 					&& collision(level.entities.get(i))) {
 				level.resetLevel();
+				Sound.DEATH.play();
 				break;
 			} else if (level.entities.get(i) instanceof Turret
 					&& collision(level.entities.get(i))

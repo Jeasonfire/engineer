@@ -2,6 +2,7 @@ package com.jeasonfire.engineer.game.entities;
 
 import java.awt.Rectangle;
 
+import com.jeasonfire.engineer.audio.Sound;
 import com.jeasonfire.engineer.game.levels.Level;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
@@ -18,6 +19,7 @@ public class Score extends Entity {
 					&& level.entities.get(i).collision(this)) {
 				level.addScore(20);
 				level.entities.remove(this);
+				Sound.PICKUP.play();
 			}
 		}
 	}

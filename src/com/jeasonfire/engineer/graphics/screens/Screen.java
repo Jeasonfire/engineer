@@ -1,6 +1,7 @@
 package com.jeasonfire.engineer.graphics.screens;
 
 import com.jeasonfire.engineer.Game;
+import com.jeasonfire.engineer.audio.Sound;
 import com.jeasonfire.engineer.graphics.HexColor;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
 
@@ -19,6 +20,7 @@ public abstract class Screen {
 		this.width = game.getGameWidth();
 		this.height = game.getGameHeight();
 		this.pixels = new int[width * height];
+		Sound.stopAll();
 	}
 
 	public abstract void draw();

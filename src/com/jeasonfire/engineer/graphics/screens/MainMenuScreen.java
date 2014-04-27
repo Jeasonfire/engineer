@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 
 import com.jeasonfire.engineer.Game;
 import com.jeasonfire.engineer.Input;
+import com.jeasonfire.engineer.audio.Sound;
 
 public class MainMenuScreen extends Screen {
 	private static int PLAY = 0, INFO = 1, LEVEL_EDITOR = 2;
@@ -17,6 +18,7 @@ public class MainMenuScreen extends Screen {
 		playBox = new Rectangle(0, 48, width, 8);
 		infoBox = new Rectangle(0, 60, width, 8);
 		levelEditorBox = new Rectangle(0, 72, width, 8);
+		Sound.MUSIC1.loop();
 	}
 
 	public void draw() {
