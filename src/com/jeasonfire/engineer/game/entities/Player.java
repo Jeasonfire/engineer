@@ -47,7 +47,7 @@ public class Player extends Entity {
 			xVel = 0;
 		}
 		if (Input.keys[KeyEvent.VK_SHIFT]) {
-			speed = 150.0f;
+			speed = 100.0f;
 		} else {
 			speed = 75.0f;
 		}

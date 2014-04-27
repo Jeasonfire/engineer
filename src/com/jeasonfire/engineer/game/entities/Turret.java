@@ -18,7 +18,7 @@ public class Turret extends Entity {
 		}
 		if (cooldown <= 0) {
 			shoot(level);
-			cooldown = 1;
+			cooldown = 0.1f;
 		}
 	}
 
