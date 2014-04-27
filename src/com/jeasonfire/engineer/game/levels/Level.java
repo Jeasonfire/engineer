@@ -144,7 +144,6 @@ public class Level {
 		if (switchGates[id] == null)
 			switchGates[id] = new SwitchGate();
 		switchGates[id].setGate(x, y);
-		setCell(1, x, y);
 	}
 
 	public void setNextLevel(int x, int y) {
@@ -189,6 +188,9 @@ public class Level {
 			break;
 		case 0xFF:
 			tiles[x + y * width] = 1;
+			break;
+		case 0xAA:
+			tiles[x + y * width] = 2;
 			break;
 		}
 	}
@@ -242,6 +244,10 @@ public class Level {
 			}
 			entities.get(i).draw(screen, (int) xScroll, (int) yScroll);
 		}
+		
+		if (currentLevel == 2) {
+			screen.drawString("Shift to run!", 8, 8);
+		}
 	}
 
 	public float getTransparency(float x, float y) {
@@ -267,7 +273,7 @@ public class Level {
 					setCell(0, sg.getGateX(), sg.getGateY());
 				}
 				if (!sg.getOpen()) {
-					setCell(0xFF, sg.getGateX(), sg.getGateY());
+					setCell(0xAA, sg.getGateX(), sg.getGateY());
 				}
 			}
 		}
@@ -285,6 +291,7 @@ public class Level {
 		case 0:
 			return false;
 		case 1:
+		case 2:
 			return true;
 		}
 	}
