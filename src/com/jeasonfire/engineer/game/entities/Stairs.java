@@ -10,7 +10,7 @@ public class Stairs extends Entity {
 		super(x, y, 0, new Rectangle(0, 0, 16, 16), new Sprite("stairs.png"));
 	}
 
-	public void update(float delta, Level level) {
+	public void update(float delta, final Level level) {
 		for (Entity e : level.entities) {
 			if (e instanceof Player && e.collision(this)) {
 				level.nextLevel();

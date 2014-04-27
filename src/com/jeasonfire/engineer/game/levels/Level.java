@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.jeasonfire.engineer.game.entities.Entity;
 import com.jeasonfire.engineer.game.entities.Player;
 import com.jeasonfire.engineer.game.entities.Stairs;
+import com.jeasonfire.engineer.game.entities.Turret;
 import com.jeasonfire.engineer.graphics.HexColor;
 import com.jeasonfire.engineer.graphics.screens.Screen;
 import com.jeasonfire.engineer.graphics.sprites.Sprite;
@@ -15,11 +16,11 @@ public class Level {
 	public int[] tiles;
 	public int width, height;
 	public ArrayList<Entity> entities;
-	public int currentLevel = 1, maxLevels = 1;
+	public int currentLevel = 1, generatedLevel, maxLevels = 2;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
-	
+
 	public boolean victory = false, gameover = false;
 
 	private class SwitchGate {
@@ -64,7 +65,7 @@ public class Level {
 		}
 	};
 
-	private SwitchGate[] switchGates = new SwitchGate[256];
+	private SwitchGate[] switchGates;
 
 	private static Sprite[] tileset;
 	static {
@@ -80,36 +81,41 @@ public class Level {
 	};
 
 	public Level() {
-		entities = new ArrayList<Entity>();
 		generate(currentLevel);
 	}
 
 	public void generate(int level) {
+		generatedLevel = level;
 		Sprite load = new Sprite("level" + level + ".png");
 		this.width = load.getWidth() * cellSize;
 		this.height = load.getHeight() * cellSize;
 		this.tiles = new int[width * height];
+		switchGates = new SwitchGate[256];
+		entities = new ArrayList<Entity>();
 		for (int y = 0; y < height / cellSize; y++) {
 			for (int x = 0; x < width / cellSize; x++) {
 				int id = load.getPixel(x, y) & 0xFFFFFF;
 				if (id == 0xFFFFFF) {
 					setNextLevel(x, y);
-				} else if (HexColor.getRed(id) == 0xFF) {						
-					if (HexColor.getGreen(id) > 0) 
+				} else if (HexColor.getRed(id) == 0xFF) {
+					if (HexColor.getGreen(id) > 0)
 						setSwitch(HexColor.getGreen(id), x, y);
-					if (HexColor.getBlue(id) > 0) 
+					if (HexColor.getBlue(id) > 0)
 						setGate(HexColor.getBlue(id), x, y);
+				} else if (id == 0xFF00) {
+					setPlayer(x, y);
+				} else if (id == 0xAA0000) {
+					setTurret(x, y);
 				} else {
 					setCell(id, x, y);
 				}
 			}
 		}
 	}
+
 	public void nextLevel() {
 		currentLevel++;
-		if (currentLevel <= maxLevels)
-			generate(currentLevel);
-		else
+		if (currentLevel > maxLevels)
 			victory = true;
 	}
 
@@ -137,9 +143,25 @@ public class Level {
 
 	public void setNextLevel(int x, int y) {
 		setCell(0, x, y);
-		entities.add(new Stairs(x * cellSize * tileSize, y * cellSize * tileSize));
+		entities.add(new Stairs(x * cellSize * tileSize + cellSize * tileSize
+				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
+				* tileSize / 2 - tileSize / 2));
+	}
+
+	public void setPlayer(int x, int y) {
+		setCell(0, x, y);
+		entities.add(new Player(x * cellSize * tileSize + cellSize * tileSize
+				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
+				* tileSize / 2 - tileSize / 2));
 	}
 	
+	public void setTurret(int x, int y) {
+		setCell(0, x, y);
+		entities.add(new Turret(x * cellSize * tileSize + cellSize * tileSize
+				/ 2 - tileSize / 2, y * cellSize * tileSize + cellSize
+				* tileSize / 2 - tileSize / 2));
+	}
+
 	public void setCell(int id, int x, int y) {
 		for (int i = 0; i < cellSize * cellSize; i++) {
 			setTile(id, x * cellSize + i % cellSize, y * cellSize + i
@@ -161,10 +183,6 @@ public class Level {
 			break;
 		case 0xFF:
 			tiles[x + y * width] = 1;
-			break;
-		case 0xFF00:
-			tiles[x + y * width] = 0;
-			entities.add(new Player(x * tileSize, y * tileSize));
 			break;
 		}
 	}
@@ -207,16 +225,16 @@ public class Level {
 				}
 			}
 		}
-		for (Entity e : entities) {
-			if (e instanceof Player) {
-				xScroll = (int) (e.getX() - screen.getWidth() / 2 + e
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i) instanceof Player) {
+				xScroll = (int) (entities.get(i).getX() - screen.getWidth() / 2 + entities.get(i)
 						.getWidth() / 2);
-				xScrollCenter = e.getX();
-				yScroll = (int) (e.getY() - screen.getHeight() / 2 + e
+				xScrollCenter = entities.get(i).getX();
+				yScroll = (int) (entities.get(i).getY() - screen.getHeight() / 2 + entities.get(i)
 						.getHeight() / 2);
-				yScrollCenter = e.getY();
+				yScrollCenter = entities.get(i).getY();
 			}
-			e.draw(screen, (int) xScroll, (int) yScroll);
+			entities.get(i).draw(screen, (int) xScroll, (int) yScroll);
 		}
 	}
 
@@ -232,8 +250,10 @@ public class Level {
 	}
 
 	public void update(float delta) {
-		for (Entity e : entities) {
-			e.update(delta, this);
+		if (currentLevel != generatedLevel)
+			generate(currentLevel);
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).update(delta, this);
 		}
 		for (SwitchGate sg : switchGates) {
 			if (sg != null) {

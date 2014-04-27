@@ -42,13 +42,17 @@ public abstract class Entity {
 		
 		return level.isSolid(x0, y0) || level.isSolid(x0, y1) || level.isSolid(x1, y0) || level.isSolid(x1, y1);
 	}
-
+	
 	public void move(float delta, Level level) {
+		move(delta, level, true);
+	}
+
+	public void move(float delta, Level level, boolean collide) {
 		x += xVel * speed * delta;
-		if (collision(level))
+		if (collision(level) && collide)
 			x -= xVel * speed * delta;
 		y += yVel * speed * delta;
-		if (collision(level))
+		if (collision(level) && collide)
 			y -= yVel * speed * delta;
 	}
 	

@@ -62,7 +62,7 @@ public class Player extends Entity {
 			level.toggleSwitch(
 					(int) (getX() / Level.cellSize / Level.tileSize),
 					(int) (getY() / Level.cellSize / Level.tileSize));
-			justPressed = 0.1f;
+			justPressed = 0.25f;
 		}
 		move(delta, level);
 	}
