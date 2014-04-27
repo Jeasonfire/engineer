@@ -23,6 +23,9 @@ public class Bullet extends Entity {
 			if (level.entities.get(i) instanceof Player && collision(level.entities.get(i))) {
 				level.resetLevel();
 				break;
+			} else if (level.entities.get(i) instanceof Turret && collision(level.entities.get(i))) {
+				level.entities.remove(i);
+				break;
 			}
 		}
 	}
