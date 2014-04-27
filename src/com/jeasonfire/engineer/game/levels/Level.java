@@ -16,7 +16,8 @@ public class Level {
 	public int[] tiles;
 	public int width, height;
 	public ArrayList<Entity> entities;
-	public int currentLevel = 1, generatedLevel, maxLevels = 2;
+	public int currentLevel = 1, maxLevels = 2;
+	private boolean generateNewLevel = true;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
@@ -85,7 +86,7 @@ public class Level {
 	}
 
 	public void generate(int level) {
-		generatedLevel = level;
+		generateNewLevel = false;
 		Sprite load = new Sprite("level" + level + ".png");
 		this.width = load.getWidth() * cellSize;
 		this.height = load.getHeight() * cellSize;
@@ -115,8 +116,13 @@ public class Level {
 
 	public void nextLevel() {
 		currentLevel++;
+		generateNewLevel = true;
 		if (currentLevel > maxLevels)
 			victory = true;
+	}
+
+	public void resetLevel() {
+		generateNewLevel = true;
 	}
 
 	public void toggleSwitch(int x, int y) {
@@ -250,7 +256,7 @@ public class Level {
 	}
 
 	public void update(float delta) {
-		if (currentLevel != generatedLevel)
+		if (generateNewLevel)
 			generate(currentLevel);
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update(delta, this);
