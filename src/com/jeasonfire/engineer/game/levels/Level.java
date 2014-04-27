@@ -16,13 +16,13 @@ public class Level {
 	public int[] tiles;
 	public int width, height;
 	public ArrayList<Entity> entities;
-	public int currentLevel = 1, maxLevels = 4;
+	public int currentLevel = 4, maxLevels = 4;
 	private boolean generateNewLevel = true;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
 	private float transparencyRange = 4;
 	private long startTime = 0;
-	private long tipLength = 3000;
+	private long tipLength = 5000;
 
 	public boolean victory = false, gameover = false;
 
@@ -298,11 +298,11 @@ public class Level {
 		}
 		
 		if (currentLevel == 4 && System.currentTimeMillis() - startTime < tipLength) {
-			screen.drawString("Switches can also  switch off.".substring(0,
-					(int) Math.min(30 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 30)),
+			screen.drawString("Switches can also  switch off. (Also, bullets aren't     laser-resistant)".substring(0,
+					(int) Math.min(73 * (System.currentTimeMillis() - startTime) / (tipLength / 2), 73)),
 					8, 8);
 		} else if (currentLevel == 4) {
-			screen.drawString("Switches can also  switch off.", 8, 8, 1,
+			screen.drawString("Switches can also  switch off. (Also, bullets aren't     laser-resistant)", 8, 8, 1,
 					(float) (1.0 / ((System.currentTimeMillis() - tipLength - startTime) / 500.0) - 0.2));
 		}
 	}
