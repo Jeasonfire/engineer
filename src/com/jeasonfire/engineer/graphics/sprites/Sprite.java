@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class Sprite {
 	private int width, height;
 	private int[] pixels;
-	
+
 	public Sprite(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -21,7 +21,7 @@ public class Sprite {
 			}
 		}
 	}
-	
+
 	public Sprite(String file) {
 		try {
 			BufferedImage img = ImageIO.read(Sprite.class.getResource(file));
@@ -38,7 +38,7 @@ public class Sprite {
 			System.exit(1);
 		}
 	}
-	
+
 	public Sprite cut(int x, int y, int width, int height) {
 		Sprite result = new Sprite(width, height);
 		for (int yp = 0; yp < height; yp++) {
@@ -50,24 +50,34 @@ public class Sprite {
 		}
 		return result;
 	}
-	
+
 	public void setPixel(int color, int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height)
 			return;
 		pixels[x + y * width] = color;
 	}
-	
+
 	public int getPixel(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height)
 			return -1;
 		return pixels[x + y * width];
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
+	}
+
+	public Sprite mirror() {
+		Sprite result = new Sprite(width, height);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				result.setPixel(pixels[(width - 1 - x) + y * width], x, y);
+			}
+		}
+		return result;
 	}
 }
