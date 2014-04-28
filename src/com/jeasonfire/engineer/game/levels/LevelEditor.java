@@ -93,22 +93,26 @@ public class LevelEditor extends Level {
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
+			try {
+				setSwitch(Integer.parseInt(JOptionPane.showInputDialog(null,
+						"Enter switch ID:")), cellX, cellY);
+			} catch (Exception ex) {
+			}
 			removeCellEntity(cellX, cellY);
 			removeCellGate(cellX, cellY);
-			removeCellSwitch(cellX, cellY);
-			setSwitch(Integer.parseInt(JOptionPane.showInputDialog(null,
-					"Enter switch ID:")), cellX, cellY);
 			break;
 		case 9:
 			if (getCellEntity(cellX, cellY) != null
 					|| getCellSwitch(cellX, cellY) != null
 					|| getCellGate(cellX, cellY) != null)
 				break;
-			removeCellEntity(cellX, cellY);
-			removeCellGate(cellX, cellY);
-			removeCellSwitch(cellX, cellY);
-			setGate(Integer.parseInt(JOptionPane.showInputDialog(null,
+			try {
+				setGate(Integer.parseInt(JOptionPane.showInputDialog(null,
 					"Enter gate ID:")), cellX, cellY);
+			} catch (Exception ex) {
+			}
+			removeCellEntity(cellX, cellY);
+			removeCellSwitch(cellX, cellY);
 			break;
 		}
 	}

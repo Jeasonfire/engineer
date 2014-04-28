@@ -19,7 +19,7 @@ public class Level {
 	public int[] tiles;
 	public int width, height;
 	public ArrayList<Entity> entities;
-	public int currentLevel = 1, maxLevels = 5;
+	public int currentLevel = 1, maxLevels = 10;
 	private boolean generateNewLevel = true;
 	protected int xScroll, yScroll;
 	private float xScrollCenter, yScrollCenter;
@@ -145,7 +145,7 @@ public class Level {
 				maxLives = 3;
 			}
 			lives = maxLives;
-			currentLevel = 6;
+			currentLevel = 10;
 		}
 		if (!(this instanceof LevelEditor)) {
 			generate(currentLevel);
@@ -204,8 +204,6 @@ public class Level {
 		generateNewLevel = true;
 		if (currentLevel > maxLevels)
 			victory = true;
-		if (lives <= 0)
-			gameover = true;
 	}
 
 	public void resetLevel() {
@@ -434,12 +432,12 @@ public class Level {
 		}
 		for (int i = 0; i < maxLives; i++) {
 			screen.drawShadedRectangle(0xDDDD00, 0xBBBB00, 0x999900,
-					screen.getWidth() - tileSize / 2 * maxLives - tileSize / 2
+					screen.getWidth() - tileSize / 2 * maxLives - maxLives - tileSize / 2
 							+ i * (tileSize / 2 + 1), tileSize / 2,
 					tileSize / 2, tileSize / 2);
 			if (i < lives) {
 				screen.drawString("*", screen.getWidth() - tileSize / 2
-						* maxLives - tileSize / 2 + i * (tileSize / 2 + 1),
+						* maxLives - maxLives - tileSize / 2 + i * (tileSize / 2 + 1),
 						tileSize / 2);
 			}
 		}
@@ -547,6 +545,8 @@ public class Level {
 		if (startTime <= 0) {
 			startTime = System.currentTimeMillis();
 		}
+		if (lives <= 0)
+			gameover = true;
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).update(delta, this);
 		}
