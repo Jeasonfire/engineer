@@ -145,7 +145,8 @@ public class Level {
 				maxLives = 3;
 			}
 			lives = maxLives;
-			currentLevel = 10;
+			currentLevel = 6;
+			score = 1;
 		}
 		if (!(this instanceof LevelEditor)) {
 			generate(currentLevel);

@@ -22,9 +22,9 @@ public class VictoryScreen extends Screen {
 
 	public void draw() {
 		drawString("Engineer", 16, 8, 2);
-		drawString("Congratulations!", width / 2 - 64, 48);
-		drawString("You won!", width / 2 - 32, 60);
-		drawString("Your score: " + score, width / 2 - 56, 72);
+		drawString("Congratulations!", width / 2 - 64, 32);
+		drawString("You won!", width / 2 - 32, 44);
+		drawString("Your score: " + score, width / 2 - 56, 56);
 
 		if (selection == BACK) {
 			drawString("> Back <", width / 2 - 32, backBox.y);
